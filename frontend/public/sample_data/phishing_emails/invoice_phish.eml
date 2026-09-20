@@ -1,0 +1,26 @@
+From: billing@secure-banklogin.com
+To: victim@company.com
+Subject: URGENT: Your Invoice #INV-2024-9856 Requires Immediate Payment
+Date: Mon, 15 Sep 2024 10:30:00 +0000
+MIME-Version: 1.0
+Content-Type: text/html; charset="UTF-8"
+Message-ID: <fake-msg-001@secure-banklogin.com>
+X-Mailer: PhishKit/2.0
+Authentication-Results: mx.company.com; spf=softfail; dkim=fail
+
+<html>
+<body style="font-family: Arial, sans-serif;">
+<div style="max-width: 600px; margin: 0 auto;">
+    <img src="https://evil-phishing-site.com/logo.png" alt="Bank Logo" />
+    <h2>Invoice Payment Required</h2>
+    <p>Dear Valued Customer,</p>
+    <p>Your invoice #INV-2024-9856 for <strong>$4,299.00</strong> is overdue and requires <strong>immediate payment</strong> to avoid account suspension.</p>
+    <p>Your account will be <strong>suspended within 24 hours</strong> if payment is not received.</p>
+    <p><a href="https://secure-banklogin.com/verify?user=victim&token=abc123">Click here to verify your identity and make payment</a></p>
+    <p>If you have questions, contact our support team immediately.</p>
+    <p>Best regards,<br/>Billing Department<br/>Secure Bank Services</p>
+    <hr/>
+    <small>This is an automated message. Do not reply. <a href="http://evil-phishing-site.com/login">Login to your account</a></small>
+</div>
+</body>
+</html>

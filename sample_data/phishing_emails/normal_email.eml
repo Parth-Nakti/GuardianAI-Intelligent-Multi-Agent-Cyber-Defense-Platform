@@ -1,0 +1,24 @@
+From: john.smith@company.com
+To: team@company.com
+Subject: Weekly Team Meeting - Agenda
+Date: Wed, 17 Sep 2024 09:00:00 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Message-ID: <legit-msg-001@company.com>
+Authentication-Results: mx.company.com; spf=pass; dkim=pass; dmarc=pass
+
+Hi Team,
+
+Here is the agenda for our weekly meeting today at 2:00 PM:
+
+1. Sprint review and progress updates
+2. Q3 roadmap discussion
+3. New team member introduction
+4. Open floor for questions
+
+Please join via the usual conference link.
+
+Best,
+John Smith
+Engineering Manager
+company.com

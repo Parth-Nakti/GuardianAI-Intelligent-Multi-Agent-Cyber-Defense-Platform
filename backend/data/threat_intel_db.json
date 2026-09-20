@@ -1,0 +1,135 @@
+{
+  "_note": "DEMONSTRATION DATA — This is a synthetic threat intelligence database for demo purposes only. Do not use in production.",
+  "ips": {
+    "203.0.113.50": {
+      "risk_level": "HIGH",
+      "category": "Command & Control",
+      "description": "Known C2 server infrastructure",
+      "first_seen": "2024-01-15",
+      "tags": ["c2", "botnet", "apt"]
+    },
+    "198.51.100.23": {
+      "risk_level": "CRITICAL",
+      "category": "Malware Distribution",
+      "description": "Active malware distribution endpoint",
+      "first_seen": "2024-02-10",
+      "tags": ["malware", "dropper"]
+    },
+    "192.0.2.100": {
+      "risk_level": "HIGH",
+      "category": "Scanning",
+      "description": "Known scanning/reconnaissance infrastructure",
+      "first_seen": "2024-03-05",
+      "tags": ["scanner", "recon"]
+    },
+    "10.0.0.50": {
+      "risk_level": "MEDIUM",
+      "category": "Suspicious Internal",
+      "description": "Internal IP associated with suspicious activity",
+      "first_seen": "2024-06-01",
+      "tags": ["internal", "lateral-movement"]
+    },
+    "192.168.1.50": {
+      "risk_level": "HIGH",
+      "category": "Brute Force Source",
+      "description": "Known source of brute force authentication attacks",
+      "first_seen": "2024-04-20",
+      "tags": ["brute-force", "credential-stuffing"]
+    }
+  },
+  "domains": {
+    "evil-phishing-site.com": {
+      "risk_level": "CRITICAL",
+      "category": "Phishing",
+      "description": "Known phishing domain targeting financial credentials",
+      "first_seen": "2024-01-20",
+      "tags": ["phishing", "credential-theft"]
+    },
+    "malware-download.xyz": {
+      "risk_level": "CRITICAL",
+      "category": "Malware Distribution",
+      "description": "Active malware payload delivery domain",
+      "first_seen": "2024-02-15",
+      "tags": ["malware", "payload"]
+    },
+    "suspicious-login.tk": {
+      "risk_level": "HIGH",
+      "category": "Phishing",
+      "description": "Credential harvesting phishing page",
+      "first_seen": "2024-03-10",
+      "tags": ["phishing", "credential-harvesting"]
+    },
+    "c2-server.top": {
+      "risk_level": "HIGH",
+      "category": "Command & Control",
+      "description": "Suspected command and control domain",
+      "first_seen": "2024-04-01",
+      "tags": ["c2", "backdoor"]
+    },
+    "data-exfil.club": {
+      "risk_level": "HIGH",
+      "category": "Data Exfiltration",
+      "description": "Domain used for data exfiltration via DNS",
+      "first_seen": "2024-05-12",
+      "tags": ["exfiltration", "dns-tunneling"]
+    },
+    "secure-banklogin.com": {
+      "risk_level": "CRITICAL",
+      "category": "Phishing",
+      "description": "Banking credential phishing domain",
+      "first_seen": "2024-06-01",
+      "tags": ["phishing", "banking", "credential-theft"]
+    },
+    "account-verify-now.com": {
+      "risk_level": "HIGH",
+      "category": "Phishing",
+      "description": "Account verification phishing domain",
+      "first_seen": "2024-07-15",
+      "tags": ["phishing", "social-engineering"]
+    }
+  },
+  "hashes": {
+    "e99a18c428cb38d5f260853678922e03": {
+      "risk_level": "CRITICAL",
+      "category": "Trojan",
+      "description": "Known trojan horse executable",
+      "malware_family": "GenericTrojan",
+      "tags": ["trojan", "backdoor"]
+    },
+    "5d41402abc4b2a76b9719d911017c592": {
+      "risk_level": "HIGH",
+      "category": "Ransomware",
+      "description": "Known ransomware variant",
+      "malware_family": "CryptoLocker",
+      "tags": ["ransomware", "encryption"]
+    }
+  },
+  "urls": {
+    "http://evil-phishing-site.com/login": {
+      "risk_level": "CRITICAL",
+      "category": "Credential Harvesting",
+      "description": "Fake login page for credential theft",
+      "tags": ["phishing", "credential-harvesting"]
+    },
+    "https://secure-banklogin.com/verify": {
+      "risk_level": "CRITICAL",
+      "category": "Credential Harvesting",
+      "description": "Fake bank verification page",
+      "tags": ["phishing", "banking"]
+    }
+  },
+  "emails": {
+    "security@evil-phishing-site.com": {
+      "risk_level": "HIGH",
+      "category": "Phishing Sender",
+      "description": "Known phishing email sender",
+      "tags": ["phishing", "spoofing"]
+    },
+    "noreply@account-verify-now.com": {
+      "risk_level": "HIGH",
+      "category": "Phishing Sender",
+      "description": "Account verification phishing sender",
+      "tags": ["phishing", "social-engineering"]
+    }
+  }
+}

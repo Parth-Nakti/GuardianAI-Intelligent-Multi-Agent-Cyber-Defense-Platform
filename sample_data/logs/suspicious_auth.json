@@ -1,0 +1,186 @@
+[
+  {
+    "timestamp": "2024-09-15T08:00:00Z",
+    "event_type": "login",
+    "username": "user1",
+    "source_ip": "192.168.1.10",
+    "status": "success",
+    "action": "authentication"
+  },
+  {
+    "timestamp": "2024-09-15T08:01:00Z",
+    "event_type": "login",
+    "username": "user2",
+    "source_ip": "192.168.1.11",
+    "status": "success",
+    "action": "authentication"
+  },
+  {
+    "timestamp": "2024-09-15T08:02:00Z",
+    "event_type": "login",
+    "username": "user3",
+    "source_ip": "192.168.1.12",
+    "status": "success",
+    "action": "authentication"
+  },
+  {
+    "timestamp": "2024-09-15T08:03:00Z",
+    "event_type": "login",
+    "username": "user4",
+    "source_ip": "192.168.1.13",
+    "status": "success",
+    "action": "authentication"
+  },
+  {
+    "timestamp": "2024-09-15T08:04:00Z",
+    "event_type": "login",
+    "username": "user5",
+    "source_ip": "192.168.1.14",
+    "status": "success",
+    "action": "authentication"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:00Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:01Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:02Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:03Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:04Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:05Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:06Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:07Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:08Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:09Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:10Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:11Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:12Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:13Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:30:14Z",
+    "event_type": "login",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "failure",
+    "action": "Failed password authentication",
+    "details": "Invalid credentials provided"
+  },
+  {
+    "timestamp": "2024-09-15T08:31:00Z",
+    "event_type": "privilege",
+    "username": "admin",
+    "source_ip": "192.168.1.50",
+    "status": "success",
+    "action": "sudo su - root",
+    "details": "Privilege escalation to root"
+  }
+]
