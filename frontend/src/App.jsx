@@ -9,7 +9,6 @@ import IncidentDetail from './pages/IncidentDetail';
 import Agents from './pages/Agents';
 import Reports from './pages/Reports';
 import { getDashboardStats } from './services/api';
-import { ThemeProvider } from './context/ThemeContext';
 
 export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -31,25 +30,23 @@ export default function App() {
   }, [fetchStats]);
 
   return (
-    <ThemeProvider>
-      <Router>
-        <div className="app-layout">
-          <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} stats={dashboardStats} />
-          <div className="main-content">
-            <TopBar stats={dashboardStats} />
-            <div className="page-content">
-              <Routes>
-                <Route path="/" element={<Dashboard stats={dashboardStats} onRefresh={fetchStats} />} />
-                <Route path="/analyze" element={<AnalyzeData onAnalysisComplete={fetchStats} />} />
-                <Route path="/incidents" element={<Incidents />} />
-                <Route path="/incidents/:id" element={<IncidentDetail />} />
-                <Route path="/agents" element={<Agents />} />
-                <Route path="/reports" element={<Reports />} />
-              </Routes>
-            </div>
+    <Router>
+      <div className="app-layout">
+        <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} stats={dashboardStats} />
+        <div className="main-content">
+          <TopBar stats={dashboardStats} />
+          <div className="page-content">
+            <Routes>
+              <Route path="/" element={<Dashboard stats={dashboardStats} onRefresh={fetchStats} />} />
+              <Route path="/analyze" element={<AnalyzeData onAnalysisComplete={fetchStats} />} />
+              <Route path="/incidents" element={<Incidents />} />
+              <Route path="/incidents/:id" element={<IncidentDetail />} />
+              <Route path="/agents" element={<Agents />} />
+              <Route path="/reports" element={<Reports />} />
+            </Routes>
           </div>
         </div>
-      </Router>
-    </ThemeProvider>
+      </div>
+    </Router>
   );
 }

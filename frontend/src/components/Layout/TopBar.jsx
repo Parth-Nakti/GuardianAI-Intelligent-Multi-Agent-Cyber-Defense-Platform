@@ -1,9 +1,24 @@
-import { Search, AlertTriangle, ShieldCheck, User, Globe, Radio, Bell, Sun, Moon } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext';
+import { useLocation } from 'react-router-dom';
+import { Globe } from 'lucide-react';
+import SearchInput from '../ui/SearchInput';
+import StatusBadge from '../ui/StatusBadge';
+
+const PAGE_NAMES = {
+  '/': 'Overview',
+  '/analyze': 'Analyze',
+  '/incidents': 'Incidents',
+  '/agents': 'Agents',
+  '/reports': 'Reports',
+};
+
+function getPageName(pathname) {
+  if (PAGE_NAMES[pathname]) return PAGE_NAMES[pathname];
+  if (pathname.startsWith('/incidents/')) return 'Incident Detail';
+  return 'Overview';
+}
 
 export default function TopBar({ stats }) {
-  const { theme, isDark, toggleTheme } = useTheme();
-  const threats = stats?.threats_detected || 0;
+  const location = useLocation();
   const critical = stats?.severity?.critical || 0;
 
   const now = new Date();
@@ -11,126 +26,47 @@ export default function TopBar({ stats }) {
 
   return (
     <header
-      className="border-b flex items-center justify-between shrink-0 z-20 transition-colors duration-200"
+      className="border-b flex items-center justify-between shrink-0 z-20 bg-surface"
       style={{
-        height: '72px',
-        paddingLeft: '32px',
-        paddingRight: '32px',
-        backgroundColor: 'var(--bg-topbar)',
+        height: '64px',
+        paddingLeft: '28px',
+        paddingRight: '28px',
         borderColor: 'var(--border-subtle)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)'
       }}
     >
-      {/* Search Bar */}
-      <div className="flex items-center gap-3 flex-1 max-w-md">
-        <div className="relative w-full">
-          <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
-          <input
-            type="text"
-            placeholder="Search IOCs, malicious IPs, hashes, incidents..."
-            className="w-full pl-11 pr-12 py-2.5 rounded-xl text-sm transition shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
-            style={{
-              backgroundColor: 'var(--bg-input)',
-              borderColor: 'var(--border-subtle)',
-              borderWidth: '1px',
-              color: 'var(--text-primary)'
-            }}
-          />
-          <kbd
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 px-2 py-0.5 text-xs font-mono rounded border pointer-events-none"
-            style={{
-              backgroundColor: 'var(--bg-inset)',
-              borderColor: 'var(--border-subtle)',
-              color: 'var(--text-muted)'
-            }}
-          >
-            ⌘K
-          </kbd>
-        </div>
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-2 text-[13px] font-medium shrink-0 mr-6">
+        <span className="text-ink-faint">Guardian AI</span>
+        <span className="text-ink-faint">/</span>
+        <span className="text-ink">{getPageName(location.pathname)}</span>
       </div>
 
-      {/* Right Controls & Telemetry Indicators */}
-      <div className="flex items-center gap-4 text-sm">
-        {/* UTC Clock */}
-        <div
-          className="hidden xl:flex items-center gap-2 font-mono text-xs px-3.5 py-2 rounded-xl border"
-          style={{
-            backgroundColor: 'var(--bg-card)',
-            borderColor: 'var(--border-subtle)',
-            color: 'var(--text-secondary)'
-          }}
-        >
-          <Globe className="w-4 h-4 text-cyan-500" />
+      {/* Search */}
+      <SearchInput placeholder="Search incidents, IPs, hashes..." className="hidden sm:flex flex-1 max-w-md" />
+
+      {/* Right controls */}
+      <div className="flex items-center gap-3 text-sm shrink-0">
+        <div className="hidden xl:flex items-center gap-1.5 font-mono text-[11.5px] px-2.5 py-1.5 rounded-lg text-ink-faint">
+          <Globe className="w-3.5 h-3.5" />
           <span>UTC {utc}</span>
         </div>
 
-        {/* Threat Status Pill */}
         {critical > 0 ? (
-          <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 font-bold shadow-sm animate-pulse">
-            <AlertTriangle className="w-4 h-4 text-rose-500" />
-            <span className="text-xs">{critical} CRITICAL ALERTS</span>
-          </div>
+          <StatusBadge status={`${critical} Critical`} tone="critical" pill pulse />
         ) : (
-          <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 font-bold shadow-sm">
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            <span className="hidden sm:inline text-xs">PERIMETER NOMINAL</span>
-          </div>
+          <StatusBadge status="Operational" pill />
         )}
 
-        {/* Threats Counter Pill */}
-        <div
-          className="flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs"
-          style={{
-            backgroundColor: 'var(--bg-card)',
-            borderColor: 'var(--border-subtle)',
-            color: 'var(--text-secondary)'
-          }}
-        >
-          <span>Threats:</span>
-          <span className="font-mono font-bold px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-500 border border-cyan-500/30 text-xs">
-            {threats}
-          </span>
-        </div>
-
-        {/* Dark / Day Mode Toggle Button */}
-        <button
-          onClick={toggleTheme}
-          title={isDark ? 'Switch to Day / Light Mode' : 'Switch to Cyber Dark Mode'}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-xl border transition group cursor-pointer shadow-sm hover:scale-105 active:scale-95"
-          style={{
-            backgroundColor: 'var(--bg-card)',
-            borderColor: 'var(--border-subtle)',
-            color: 'var(--text-primary)'
-          }}
-        >
-          {isDark ? (
-            <>
-              <Sun className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform" />
-              <span className="text-xs font-bold text-amber-300">Day Mode</span>
-            </>
-          ) : (
-            <>
-              <Moon className="w-4 h-4 text-indigo-600 group-hover:-rotate-12 transition-transform" />
-              <span className="text-xs font-bold text-slate-700">Dark Mode</span>
-            </>
-          )}
-        </button>
-
-        {/* Analyst Profile Chip */}
-        <div
-          className="flex items-center gap-3 pl-3 border-l"
-          style={{ borderColor: 'var(--border-subtle)' }}
-        >
+        <div className="flex items-center gap-2.5 pl-3 border-l" style={{ borderColor: 'var(--border-subtle)' }}>
           <div className="relative">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-cyan-500/20 ring-2 ring-cyan-500/30">
+            <div className="w-8 h-8 rounded-lg bg-elevated border border-line flex items-center justify-center text-ink text-[11px] font-semibold">
               SA
             </div>
-            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-white dark:border-[#090f1f]"></span>
+            <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-success border-2 border-surface" />
           </div>
           <div className="hidden sm:flex flex-col text-left leading-tight">
-            <span className="font-bold text-xs" style={{ color: 'var(--text-primary)' }}>SOC Analyst</span>
-            <span className="text-[11px] font-mono text-cyan-500">Tier-2 Swarm</span>
+            <span className="font-medium text-[12px] text-ink">SOC Analyst</span>
+            <span className="text-[10.5px] text-ink-faint">Tier-2</span>
           </div>
         </div>
       </div>

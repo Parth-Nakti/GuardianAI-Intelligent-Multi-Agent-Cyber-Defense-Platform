@@ -1,151 +1,141 @@
 import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard, Upload, AlertTriangle, Bot,
-  FileText, ChevronLeft, ChevronRight, Shield, Activity, Cpu, Sparkles
+  LayoutDashboard, AlertTriangle, Bot, Upload, FileText,
+  ChevronLeft, ChevronRight, ShieldHalf
 } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext';
 
-export default function Sidebar({ collapsed, onToggle }) {
-  const { isDark } = useTheme();
+export default function Sidebar({ collapsed, onToggle, stats }) {
+  const incidentCount = stats?.threats_detected ?? null;
+  const agentCount = stats?.agents?.length ?? 7;
 
-  const navItems = [
-    { to: '/', icon: LayoutDashboard, label: 'SOC Dashboard', tag: '01' },
-    { to: '/analyze', icon: Upload, label: 'Threat Scanner', tag: '02' },
-    { to: '/incidents', icon: AlertTriangle, label: 'Incidents Queue', tag: '03' },
-    { to: '/agents', icon: Bot, label: 'AI Swarm Monitor', tag: '04' },
-    { to: '/reports', icon: FileText, label: 'Audit Reports', tag: '05' },
+  // Below the `md` breakpoint the sidebar always renders narrow (icon-only),
+  // regardless of the manual toggle, so it never crowds out page content on
+  // small screens. At `md` and up, the manual `collapsed` toggle applies as before.
+  const expandedVisible = collapsed ? 'hidden' : 'hidden md:flex';
+  const expandedVisibleBlock = collapsed ? 'hidden' : 'hidden md:block';
+  const narrowNavClasses = `justify-center px-0 ${collapsed ? '' : 'md:justify-start md:px-2.5'}`;
+
+  const sections = [
+    {
+      label: 'Command',
+      items: [
+        { to: '/', icon: LayoutDashboard, label: 'Overview' },
+        { to: '/incidents', icon: AlertTriangle, label: 'Incidents', count: incidentCount },
+        { to: '/agents', icon: Bot, label: 'Agents', count: agentCount },
+      ],
+    },
+    {
+      label: 'Operations',
+      items: [
+        { to: '/analyze', icon: Upload, label: 'Analyze' },
+        { to: '/reports', icon: FileText, label: 'Reports' },
+      ],
+    },
   ];
 
   return (
     <aside
-      className={`h-screen flex flex-col border-r transition-all duration-300 shrink-0 select-none z-30 shadow-xl ${
-        collapsed ? 'w-[72px]' : 'w-[260px]'
+      className={`h-screen flex flex-col border-r transition-all duration-200 shrink-0 select-none z-30 w-17 ${
+        collapsed ? '' : 'md:w-58'
       }`}
       style={{
         backgroundColor: 'var(--bg-sidebar)',
         borderColor: 'var(--border-subtle)',
       }}
     >
-      {/* Brand Header */}
+      {/* Brand */}
       <div
-        className="px-5 border-b flex items-center justify-between"
-        style={{
-          height: '72px',
-          borderColor: 'var(--border-subtle)'
-        }}
+        className="px-4 border-b flex items-center justify-between shrink-0"
+        style={{ height: '64px', borderColor: 'var(--border-subtle)' }}
       >
-        <div className="flex items-center gap-3.5 overflow-hidden">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-cyan-500 to-blue-600 shadow-[0_0_18px_rgba(6,182,212,0.35)] text-white shrink-0">
-            <Shield className="w-5 h-5 fill-white/20 stroke-[2.2]" />
+        <div className="flex items-center gap-2.5 overflow-hidden">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-accent/15 border border-accent/30 text-accent shrink-0">
+            <ShieldHalf className="w-4 h-4" />
           </div>
-          {!collapsed && (
-            <div className="flex flex-col leading-tight">
-              <span
-                className="font-extrabold text-[15px] tracking-wide"
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  color: 'var(--text-heading)'
-                }}
-              >
-                SENTINEL AI
-              </span>
-              <span className="text-[11px] text-cyan-500 font-semibold tracking-wider flex items-center gap-1 mt-0.5">
-                <Sparkles className="w-2.5 h-2.5" />
-                CYBER DEFENSE SOC
-              </span>
-            </div>
-          )}
+          <div className={`flex-col leading-tight ${expandedVisible}`}>
+            <span className="font-semibold text-[13.5px] tracking-wide text-ink">
+              GUARDIAN AI
+            </span>
+            <span className="text-[10.5px] text-ink-muted font-medium tracking-wider">
+              CYBER DEFENSE
+            </span>
+          </div>
         </div>
 
         <button
           onClick={onToggle}
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-cyan-500 hover:bg-slate-500/10 transition hidden md:flex cursor-pointer"
+          className="p-1 rounded-md text-ink-muted hover:text-accent hover:bg-elevated transition hidden md:flex cursor-pointer"
         >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
         </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3.5 py-6 space-y-2 overflow-y-auto">
-        {!collapsed && (
-          <div
-            className="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider font-mono"
-            style={{ color: 'var(--text-muted)' }}
-          >
-            Navigation
-          </div>
-        )}
-        {navItems.map(({ to, icon: Icon, label, tag }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
-            className={({ isActive }) =>
-              `group flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-bold transition-all ${
-                isActive
-                  ? 'bg-cyan-500/15 text-cyan-500 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.12)]'
-                  : 'hover:bg-slate-500/10 border border-transparent'
-              } ${collapsed ? 'justify-center px-0' : ''}`
-            }
-            style={({ isActive }) => ({
-              color: isActive ? '#06b6d4' : 'var(--text-secondary)'
-            })}
-          >
-            <Icon className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" />
-            {!collapsed && (
-              <span className="flex items-center justify-between flex-1">
-                <span>{label}</span>
-                <span
-                  className="font-mono text-[11px] px-2 py-0.5 rounded transition"
-                  style={{
-                    backgroundColor: 'var(--bg-inset)',
-                    color: 'var(--text-muted)'
-                  }}
+      <nav className="flex-1 px-3 py-5 overflow-y-auto">
+        {sections.map((section, si) => (
+          <div key={section.label} className={si > 0 ? 'mt-6' : ''}>
+            <div className={`px-2.5 pb-2 text-[10.5px] font-semibold uppercase tracking-wider text-ink-faint ${expandedVisibleBlock}`}>
+              {section.label}
+            </div>
+            <div className="space-y-0.5">
+              {section.items.map(({ to, icon: Icon, label, count }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={to === '/'}
+                  className={({ isActive }) =>
+                    `group relative flex items-center gap-3 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-colors ${
+                      isActive ? 'bg-accent/10 text-accent' : 'text-ink-soft hover:bg-elevated hover:text-ink'
+                    } ${narrowNavClasses}`
+                  }
                 >
-                  {tag}
-                </span>
-              </span>
-            )}
-          </NavLink>
+                  {({ isActive }) => (
+                    <>
+                      {isActive && (
+                        <span className="absolute left-0 top-1.5 bottom-1.5 w-[2.5px] rounded-full bg-accent" />
+                      )}
+                      <Icon className="w-4 h-4 shrink-0" />
+                      <span className={`items-center justify-between flex-1 ${expandedVisible}`}>
+                        <span>{label}</span>
+                        {count !== undefined && count !== null && (
+                          <span
+                            className={`font-mono text-[10.5px] px-1.5 py-0.5 rounded ${
+                              isActive ? 'bg-accent/15 text-accent' : 'bg-elevated text-ink-muted'
+                            }`}
+                          >
+                            {count}
+                          </span>
+                        )}
+                      </span>
+                    </>
+                  )}
+                </NavLink>
+              ))}
+            </div>
+          </div>
         ))}
       </nav>
 
-      {/* SOC Station Health Footer */}
-      <div
-        className="p-4 border-t"
-        style={{ borderColor: 'var(--border-subtle)' }}
-      >
-        {!collapsed ? (
-          <div
-            className="p-3.5 rounded-xl border text-xs"
-            style={{
-              backgroundColor: 'var(--bg-inset)',
-              borderColor: 'var(--border-subtle)'
-            }}
-          >
-            <div className="flex items-center justify-between mb-1.5">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
-                </span>
-                <span className="text-emerald-500 font-bold tracking-wide text-xs">SWARM ONLINE</span>
-              </div>
-              <span className="font-mono text-[11px]" style={{ color: 'var(--text-muted)' }}>14ms latency</span>
-            </div>
-            <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-              Consensus Engine: <span className="font-semibold text-emerald-500">Active (7/7)</span>
-            </div>
+      {/* Status Footer */}
+      <div className="p-3 border-t shrink-0" style={{ borderColor: 'var(--border-subtle)' }}>
+        <div className={`items-center gap-2.5 px-2.5 py-2.5 rounded-lg bg-elevated ${expandedVisible}`}>
+          <span className="relative flex h-1.5 w-1.5 shrink-0">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-success opacity-60" />
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
+          </span>
+          <div className="leading-tight">
+            <div className="text-[11.5px] font-semibold text-ink-soft">System Operational</div>
+            <div className="text-[10.5px] text-ink-faint">7 / 7 agents online</div>
           </div>
-        ) : (
-          <div className="flex justify-center py-2" title="Swarm Engine: 100% Online">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span>
-            </span>
-          </div>
-        )}
+        </div>
+
+        <div className={`justify-center py-1.5 ${collapsed ? 'flex' : 'flex md:hidden'}`} title="System Operational · 7/7 agents online">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-success opacity-60" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-success" />
+          </span>
+        </div>
       </div>
     </aside>
   );

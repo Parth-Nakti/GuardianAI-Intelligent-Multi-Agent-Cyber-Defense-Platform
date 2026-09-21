@@ -2,10 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, RefreshCw, AlertTriangle, FileText, Play, Check,
-  Shield, Terminal, Cpu, Database, CheckCircle2, Globe, Clock,
-  ExternalLink, Layers
+  Terminal, Cpu
 } from 'lucide-react';
 import { getIncident, updateIncidentStatus } from '../services/api';
+import StatCard from '../components/ui/StatCard';
+import SeverityBadge from '../components/ui/SeverityBadge';
 
 export default function IncidentDetail() {
   const { id } = useParams();
@@ -46,42 +47,31 @@ export default function IncidentDetail() {
     setExecutedActions(prev => ({ ...prev, [actionIdx]: true }));
   };
 
-  const getBadge = (sev) => {
-    const s = (sev || '').toLowerCase();
-    if (s === 'critical') return 'badge-critical';
-    if (s === 'high') return 'badge-high';
-    if (s === 'medium') return 'badge-medium';
-    return 'badge-low';
-  };
-
   const getMitreTag = (type = '', title = '') => {
     const t = `${type} ${title}`.toLowerCase();
-    if (t.includes('brute') || t.includes('auth')) return 'T1110 • Brute Force';
-    if (t.includes('phish') || t.includes('email') || t.includes('url')) return 'T1566 • Phishing';
-    if (t.includes('scan') || t.includes('port')) return 'T1046 • Network Service Discovery';
-    return 'T1059 • Command Execution';
+    if (t.includes('brute') || t.includes('auth')) return 'T1110 · Brute Force';
+    if (t.includes('phish') || t.includes('email') || t.includes('url')) return 'T1566 · Phishing';
+    if (t.includes('scan') || t.includes('port')) return 'T1046 · Network Service Discovery';
+    return 'T1059 · Command Execution';
   };
 
   if (loading) {
     return (
-      <div className="py-28 text-center text-slate-400">
-        <RefreshCw className="w-8 h-8 animate-spin text-cyan-400 mx-auto mb-3" />
-        <h3 className="text-base font-bold text-white">Loading Forensic Dossier...</h3>
-        <p className="text-xs text-slate-500 mt-1 font-mono">Retrieving cross-vector agent telemetry</p>
+      <div className="py-24 text-center text-ink-muted">
+        <RefreshCw className="w-7 h-7 animate-spin text-accent mx-auto mb-3" />
+        <h3 className="text-[15px] font-semibold text-ink">Loading Forensic Dossier...</h3>
+        <p className="text-[12px] mt-1 font-mono text-ink-faint">Retrieving cross-vector agent telemetry</p>
       </div>
     );
   }
 
   if (!incident) {
     return (
-      <div className="text-center py-20 glass-card p-8 max-w-md mx-auto">
-        <AlertTriangle className="w-10 h-10 text-rose-400 mx-auto mb-3" />
-        <h2 className="text-lg font-bold text-white">Incident Record Not Found</h2>
-        <p className="text-sm text-slate-400 mt-1">Incident #{id} could not be located in registry.</p>
-        <button
-          onClick={() => navigate('/incidents')}
-          className="btn btn-primary mt-5 text-xs py-2 px-4"
-        >
+      <div className="text-center py-16 card p-8 max-w-md mx-auto">
+        <AlertTriangle className="w-9 h-9 text-danger mx-auto mb-3" />
+        <h2 className="text-[16px] font-semibold text-ink">Incident Record Not Found</h2>
+        <p className="text-[13px] text-ink-muted mt-1">Incident #{id} could not be located in registry.</p>
+        <button onClick={() => navigate('/incidents')} className="btn btn-primary mt-5 text-[12px]">
           <ArrowLeft className="w-3.5 h-3.5" /> Back to Queue
         </button>
       </div>
@@ -102,116 +92,80 @@ export default function IncidentDetail() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-16">
-      {/* 1. Header Banner */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-line">
         <div className="flex items-start sm:items-center gap-4">
           <button
             onClick={() => navigate('/incidents')}
-            className="p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition"
+            className="p-2 rounded-lg bg-elevated hover:bg-card border border-line text-ink-muted hover:text-ink transition"
             title="Back to incident list"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-3.5 h-3.5" />
           </button>
           <div>
-            <div className="flex flex-wrap items-center gap-2.5">
-              <span className="font-mono text-xs font-bold text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-md border border-cyan-500/25">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-mono text-[11px] font-semibold text-accent bg-accent/10 px-2 py-1 rounded-md border border-accent/25">
                 {incident.incident_id || `#${incident.id}`}
               </span>
-              <span className={`badge ${getBadge(incident.severity)}`}>
-                {incident.severity}
-              </span>
-              <span className="mitre-tag">
-                {getMitreTag(incident.incident_type, incident.title)}
-              </span>
-              <span className="text-xs font-mono text-slate-400 bg-slate-900/80 px-2.5 py-1 rounded-md border border-slate-800">
+              <SeverityBadge severity={incident.severity} />
+              <span className="mitre-tag">{getMitreTag(incident.incident_type, incident.title)}</span>
+              <span className="text-[11px] font-mono text-ink-muted bg-elevated px-2 py-1 rounded-md border border-line">
                 Asset: {incident.source_file ? `srv-${incident.source_file.split('.')[0]}` : 'edge-gw-01'}
               </span>
             </div>
-            <h1 className="text-2xl lg:text-3xl font-extrabold text-white mt-2 tracking-tight">
-              {incident.title}
-            </h1>
+            <h1 className="text-[24px] font-semibold text-ink mt-2 tracking-tight">{incident.title}</h1>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-slate-900/80 px-3 py-2 rounded-xl border border-slate-800">
-            <span className="text-xs text-slate-400">Status:</span>
+          <div className="flex items-center gap-2 bg-elevated px-3 py-2 rounded-lg border border-line">
+            <span className="text-[12px] text-ink-muted">Status:</span>
             <select
               value={incident.status}
               disabled={updating}
               onChange={(e) => handleStatusUpdate(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer"
+              className="bg-transparent text-[12px] font-semibold text-ink focus:outline-none cursor-pointer"
             >
-              <option value="Open" className="bg-slate-900">Open</option>
-              <option value="Investigating" className="bg-slate-900">Investigating</option>
-              <option value="Resolved" className="bg-slate-900">Resolved</option>
-              <option value="Closed" className="bg-slate-900">Closed</option>
+              <option value="Open">Open</option>
+              <option value="Investigating">Investigating</option>
+              <option value="Resolved">Resolved</option>
+              <option value="Closed">Closed</option>
             </select>
           </div>
 
-          <button
-            onClick={() => navigate('/reports')}
-            className="btn btn-primary text-xs py-2 px-4 shadow-[0_0_15px_rgba(6,182,212,0.25)]"
-          >
+          <button onClick={() => navigate('/reports')} className="btn btn-primary text-[12px]">
             <FileText className="w-3.5 h-3.5" />
             <span>Generate PDF</span>
           </button>
         </div>
       </div>
 
-      {/* 2. Key Forensic Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
-        <div className="glass-card p-5 border-l-4 border-l-cyan-500">
-          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            Swarm Consensus
-          </span>
-          <p className="text-3xl font-extrabold text-cyan-400 mt-2 font-mono">
-            {incident.correlation_score ? `${Math.round(incident.correlation_score * 100)}%` : '88%'}
-          </p>
-          <span className="text-xs text-slate-500 mt-1 block">Cross-vector validated</span>
-        </div>
-
-        <div className="glass-card p-5 border-l-4 border-l-rose-500">
-          <span className="text-xs font-semibold text-rose-300 uppercase tracking-wider">
-            Telemetry Source
-          </span>
-          <p className="text-base font-bold text-white mt-2 truncate font-mono">
-            {incident.source_file || incident.source || 'Telemetry'}
-          </p>
-          <span className="text-xs text-slate-500 mt-1 block">Inbound payload</span>
-        </div>
-
-        <div className="glass-card p-5 border-l-4 border-l-indigo-500">
-          <span className="text-xs font-semibold text-indigo-300 uppercase tracking-wider">
-            Extracted IOCs
-          </span>
-          <p className="text-3xl font-extrabold text-indigo-300 mt-2 font-mono">
-            {indicators.length}
-          </p>
-          <span className="text-xs text-slate-500 mt-1 block">IPs, hashes & domains</span>
-        </div>
-
-        <div className="glass-card p-5 border-l-4 border-l-emerald-500">
-          <span className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">
-            Containment Actions
-          </span>
-          <p className="text-3xl font-extrabold text-emerald-400 mt-2 font-mono">
-            {responseActions.length || 3}
-          </p>
-          <span className="text-xs text-slate-500 mt-1 block">Automated playbooks</span>
-        </div>
+      {/* Metrics */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatCard
+          label="Swarm Consensus"
+          value={incident.correlation_score ? `${Math.round(incident.correlation_score * 100)}%` : '—'}
+          subtext="Cross-vector validated"
+          accent="accent"
+        />
+        <StatCard
+          label="Telemetry Source"
+          value={incident.source_file || incident.source || 'N/A'}
+          subtext="Inbound payload"
+          accent="danger"
+        />
+        <StatCard label="Extracted IOCs" value={indicators.length} subtext="IPs, hashes & domains" accent="ai" />
+        <StatCard label="Containment Actions" value={responseActions.length} subtext="Automated playbooks" accent="success" />
       </div>
 
-      {/* 3. Forensic Tabs */}
-      <div className="flex gap-2 border-b border-slate-800/80 pb-1 overflow-x-auto">
+      {/* Tabs */}
+      <div className="flex gap-1 border-b border-line overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2.5 text-sm font-medium transition border-b-2 whitespace-nowrap ${
-              activeTab === tab.id
-                ? 'border-cyan-400 text-cyan-300 font-semibold shadow-[0_4px_12px_rgba(6,182,212,0.15)]'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+            className={`px-4 py-2.5 text-[13px] font-medium transition border-b-2 whitespace-nowrap cursor-pointer ${
+              activeTab === tab.id ? 'border-accent text-accent' : 'border-transparent text-ink-muted hover:text-ink-soft'
             }`}
           >
             {tab.label}
@@ -219,40 +173,37 @@ export default function IncidentDetail() {
         ))}
       </div>
 
-      {/* 4. Tab 1: Overview & Raw Forensic Artifacts */}
+      {/* Overview */}
       {activeTab === 'overview' && (
-        <div className="space-y-6">
-          <div className="glass-card p-6">
-            <h3 className="text-base font-bold text-white mb-2">Threat Assessment Narrative</h3>
-            <p className="text-sm text-slate-300 leading-relaxed">
+        <div className="space-y-5">
+          <div className="card p-6">
+            <h3 className="text-[15px] font-semibold text-ink mb-2">Threat Assessment Narrative</h3>
+            <p className="text-[13.5px] text-ink-soft leading-relaxed">
               {incident.description || 'Automated multi-agent threat classification identified suspicious activity matching active cyber threat actor tradecraft.'}
             </p>
 
             {correlationData?.reasoning && (
-              <div className="mt-5 p-5 bg-slate-900/80 rounded-xl border border-slate-800">
-                <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider font-mono block mb-1">
+              <div className="mt-4 p-4 bg-elevated rounded-lg border border-line">
+                <span className="text-[11px] font-semibold text-ai uppercase tracking-wider font-mono block mb-1">
                   Cross-Vector Graph Correlation Engine
                 </span>
-                <p className="text-xs text-slate-300 leading-relaxed font-mono">{correlationData.reasoning}</p>
+                <p className="text-[12.5px] text-ink-soft leading-relaxed font-mono">{correlationData.reasoning}</p>
               </div>
             )}
           </div>
 
           {incident.evidence?.length > 0 && (
-            <div className="glass-card p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <Terminal className="w-4 h-4 text-emerald-400" />
+            <div className="card p-6">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-[15px] font-semibold text-ink flex items-center gap-2">
+                  <Terminal className="w-3.5 h-3.5 text-success" />
                   Forensic Telemetry Artifacts
                 </h3>
-                <span className="text-xs font-mono text-slate-500">Live Telemetry Ingestion</span>
+                <span className="text-[11px] font-mono text-ink-faint">Live Telemetry Ingestion</span>
               </div>
               <div className="space-y-2">
                 {incident.evidence.map((ev, i) => (
-                  <div
-                    key={i}
-                    className="p-3 bg-slate-950/80 rounded-xl border border-slate-800 font-mono text-xs text-emerald-400 overflow-x-auto"
-                  >
+                  <div key={i} className="p-3 bg-surface rounded-lg border border-line font-mono text-[12px] text-success overflow-x-auto">
                     {typeof ev === 'object' ? JSON.stringify(ev, null, 2) : ev}
                   </div>
                 ))}
@@ -262,27 +213,27 @@ export default function IncidentDetail() {
         </div>
       )}
 
-      {/* Tab 2: Swarm Findings (Agent-by-Agent) */}
+      {/* Findings */}
       {activeTab === 'findings' && (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {agentFindings.length === 0 ? (
-            <div className="glass-card p-12 text-center text-slate-400 text-sm">No distinct agent findings attached.</div>
+            <div className="card p-12 text-center text-ink-muted text-[13px]">No distinct agent findings attached.</div>
           ) : (
             agentFindings.map((f, i) => (
-              <div key={i} className="glass-card p-6 border-l-4 border-l-cyan-500">
+              <div key={i} className="card p-5 border-l-2 border-l-accent">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-cyan-400 flex items-center gap-1.5 font-mono">
+                  <span className="text-[11px] font-semibold text-accent flex items-center gap-1.5 font-mono">
                     <Cpu className="w-3.5 h-3.5" />
                     {f.agent_name || `Security Agent #${i + 1}`}
                   </span>
-                  <span className={`badge ${getBadge(f.severity)} text-xs`}>{f.severity || 'MEDIUM'}</span>
+                  <SeverityBadge severity={f.severity || 'MEDIUM'} className="text-xs" />
                 </div>
-                <h4 className="text-base font-bold text-white mt-1">{f.finding_type || f.title}</h4>
-                <p className="text-sm text-slate-300 mt-1 leading-relaxed">{f.description || f.summary}</p>
+                <h4 className="text-[14px] font-semibold text-ink mt-1">{f.finding_type || f.title}</h4>
+                <p className="text-[13px] text-ink-soft mt-1 leading-relaxed">{f.description || f.summary}</p>
                 {f.confidence && (
-                  <div className="mt-3 pt-2 border-t border-slate-800 flex items-center gap-2 text-xs text-slate-400">
+                  <div className="mt-3 pt-2 border-t border-line flex items-center gap-2 text-[12px] text-ink-muted">
                     <span>Agent Confidence:</span>
-                    <span className="font-mono text-emerald-400 font-semibold">{Math.round(f.confidence * 100)}%</span>
+                    <span className="font-mono text-success font-semibold">{Math.round(f.confidence * 100)}%</span>
                   </div>
                 )}
               </div>
@@ -291,44 +242,36 @@ export default function IncidentDetail() {
         </div>
       )}
 
-      {/* Tab 3: Discovered IOCs */}
+      {/* IOCs */}
       {activeTab === 'iocs' && (
-        <div className="glass-card overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-800 bg-slate-900/50">
-            <h3 className="text-base font-bold text-white">Extracted Indicators of Compromise</h3>
-            <p className="text-xs text-slate-400 mt-0.5">Known malicious IP addresses, domain names, and file hashes</p>
+        <div className="card overflow-hidden">
+          <div className="px-6 py-4 border-b border-line bg-surface">
+            <h3 className="text-[15px] font-semibold text-ink">Extracted Indicators of Compromise</h3>
+            <p className="text-[12px] text-ink-muted mt-0.5">Known malicious IP addresses, domain names, and file hashes</p>
           </div>
           <table className="w-full">
             <thead>
               <tr>
-                <th>INDICATOR VALUE</th>
-                <th>TYPE</th>
-                <th>RISK LEVEL</th>
-                <th>THREAT ATTRIBUTION</th>
+                <th>Indicator Value</th>
+                <th>Type</th>
+                <th>Risk Level</th>
+                <th>Threat Attribution</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-line">
               {indicators.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="py-12 text-center text-slate-400 text-xs">No indicators found.</td>
-                </tr>
+                <tr><td colSpan={4} className="py-10 text-center text-ink-muted text-[12px]">No indicators found.</td></tr>
               ) : (
                 indicators.map((ioc, i) => (
-                  <tr key={i} className="hover:bg-slate-800/30">
-                    <td className="font-mono text-xs font-bold text-cyan-400">
+                  <tr key={i}>
+                    <td className="font-mono text-[12px] font-semibold text-accent">
                       {typeof ioc === 'object' ? ioc.value : ioc}
                     </td>
-                    <td className="text-xs text-slate-300 uppercase">
+                    <td className="text-[12px] text-ink-soft uppercase">
                       {typeof ioc === 'object' ? ioc.type || 'IP' : 'IOC'}
                     </td>
-                    <td>
-                      <span className="badge badge-high text-xs">
-                        {typeof ioc === 'object' ? ioc.risk_level || 'HIGH' : 'SUSPICIOUS'}
-                      </span>
-                    </td>
-                    <td className="text-xs text-slate-300">
-                      {typeof ioc === 'object' ? ioc.category || 'Identified Threat' : 'Known Malicious Artifact'}
-                    </td>
+                    <td><span className="badge badge-high text-xs">{typeof ioc === 'object' ? ioc.risk_level || 'HIGH' : 'SUSPICIOUS'}</span></td>
+                    <td className="text-[12px] text-ink-soft">{typeof ioc === 'object' ? ioc.category || 'Identified Threat' : 'Known Malicious Artifact'}</td>
                   </tr>
                 ))
               )}
@@ -337,36 +280,29 @@ export default function IncidentDetail() {
         </div>
       )}
 
-      {/* Tab 4: Containment Playbook Runner */}
+      {/* Playbook */}
       {activeTab === 'playbook' && (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {responseActions.length === 0 ? (
-            <div className="glass-card p-12 text-center text-slate-400 text-sm">No response actions staged.</div>
+            <div className="card p-12 text-center text-ink-muted text-[13px]">No response actions staged.</div>
           ) : (
             responseActions.map((action, i) => {
               const isObj = typeof action === 'object';
               const executed = executedActions[i];
               return (
-                <div
-                  key={i}
-                  className="glass-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5"
-                >
-                  <div className="flex items-start gap-3.5">
-                    <span className="w-8 h-8 rounded-xl bg-cyan-500/15 text-cyan-300 text-xs font-bold flex items-center justify-center shrink-0 font-mono mt-0.5 border border-cyan-500/30">
+                <div key={i} className="card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <span className="w-7 h-7 rounded-lg bg-accent/10 text-accent text-[12px] font-semibold flex items-center justify-center shrink-0 font-mono mt-0.5 border border-accent/25">
                       {i + 1}
                     </span>
                     <div>
-                      <h4 className="text-base font-bold text-white">
-                        {isObj ? action.action || action.title : action}
-                      </h4>
+                      <h4 className="text-[14px] font-semibold text-ink">{isObj ? action.action || action.title : action}</h4>
                       {isObj && action.description && (
-                        <p className="text-xs text-slate-400 mt-1 leading-relaxed">{action.description}</p>
+                        <p className="text-[12px] text-ink-muted mt-1 leading-relaxed">{action.description}</p>
                       )}
                       <div className="mt-2 flex items-center gap-2">
-                        <span className="badge badge-high text-[10px]">
-                          {isObj ? action.priority || 'HIGH' : 'HIGH'} PRIORITY
-                        </span>
-                        <span className="text-[11px] text-slate-500 font-mono">Automated Firewall/SOC Rule</span>
+                        <span className="badge badge-high text-[10px]">{isObj ? action.priority || 'HIGH' : 'HIGH'} PRIORITY</span>
+                        <span className="text-[10.5px] text-ink-faint font-mono">Automated Firewall/SOC Rule</span>
                       </div>
                     </div>
                   </div>
@@ -374,19 +310,9 @@ export default function IncidentDetail() {
                   <button
                     onClick={() => handleExecuteAction(i)}
                     disabled={executed}
-                    className={`btn text-xs py-2 px-4 shrink-0 font-semibold ${
-                      executed ? 'btn-success' : 'btn-primary'
-                    }`}
+                    className={`btn text-[12px] shrink-0 ${executed ? 'btn-success' : 'btn-primary'}`}
                   >
-                    {executed ? (
-                      <>
-                        <Check className="w-3.5 h-3.5" /> Rule Applied
-                      </>
-                    ) : (
-                      <>
-                        <Play className="w-3.5 h-3.5 fill-current" /> Execute Playbook
-                      </>
-                    )}
+                    {executed ? (<><Check className="w-3.5 h-3.5" /> Rule Applied</>) : (<><Play className="w-3.5 h-3.5 fill-current" /> Execute Playbook</>)}
                   </button>
                 </div>
               );
