@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   Bot, RefreshCw, Network, Mail, FileCode,
   FileText, Database, Shield, Cpu, Activity,
-  CheckCircle2, ArrowRight, Zap, Layers
+  CheckCircle2, ArrowRight, Zap, Layers, Sparkles
 } from 'lucide-react';
 import { getAgents } from '../services/api';
 
@@ -86,80 +86,83 @@ export default function Agents() {
   useEffect(() => { fetchAgents(); }, [fetchAgents]);
 
   return (
-    <div className="space-y-10 max-w-6xl mx-auto pb-16">
+    <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* 1. Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800/60">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">AI Defense Swarm</h1>
+          <h1 className="text-2xl lg:text-3xl font-extrabold text-white tracking-tight bg-gradient-to-r from-white via-slate-100 to-cyan-300 bg-clip-text text-transparent">
+            AI Defense Swarm
+          </h1>
           <p className="text-slate-400 text-sm mt-1">
             7 autonomous specialized agents collaborating in a multi-stage cyber defense consensus pipeline
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold shadow-[0_0_12px_rgba(16,185,129,0.1)]">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>7/7 Agents Healthy</span>
+            <span>7 / 7 AGENTS ONLINE</span>
           </div>
 
           <button
             onClick={fetchAgents}
             disabled={loading}
-            className="btn btn-ghost text-xs py-2 px-3.5 text-slate-300"
+            className="btn btn-ghost text-xs py-2 px-3.5"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            Refresh Telemetry
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-cyan-400' : ''}`} />
+            Refresh Swarm
           </button>
         </div>
       </div>
 
       {/* 2. Swarm Collaboration Pipeline Map */}
-      <div className="card p-7">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono mb-4">
+      <div className="glass-card p-6">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+          <Zap className="w-4 h-4 text-cyan-400" />
           Autonomous 3-Stage Collaboration Architecture
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-5 rounded-xl bg-slate-900 border border-blue-500/30 flex flex-col justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="p-5 rounded-xl bg-slate-900/60 border border-cyan-500/30 flex flex-col justify-between">
             <div>
-              <span className="text-[10px] font-mono font-bold text-blue-400 uppercase tracking-wider">
+              <span className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider">
                 Stage 1 • Vector Ingestion
               </span>
               <h3 className="text-base font-bold text-white mt-1">Specialized Detection</h3>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Network Monitor, Phishing Detector, and Malware Analyzer parse raw payloads concurrently.
+                Network Monitor, Phishing Detector, and Malware Analyzer parse raw telemetry concurrently.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-blue-300">
+            <div className="mt-4 pt-3 border-t border-slate-800 text-xs font-mono text-cyan-300">
               Output: Normalized Forensic Signals
             </div>
           </div>
 
-          <div className="p-5 rounded-xl bg-slate-900 border border-purple-500/30 flex flex-col justify-between">
+          <div className="p-5 rounded-xl bg-slate-900/60 border border-indigo-500/30 flex flex-col justify-between">
             <div>
-              <span className="text-[10px] font-mono font-bold text-purple-400 uppercase tracking-wider">
+              <span className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
                 Stage 2 • Cross-Vector Synthesis
               </span>
               <h3 className="text-base font-bold text-white mt-1">Threat Intel & Correlation</h3>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Threat Intel looks up global IOCs; Correlation Agent computes attack graphs and confidence.
+                Threat Intel queries IOC reputation; Correlation Agent constructs attack graphs & confidence score.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-purple-300">
+            <div className="mt-4 pt-3 border-t border-slate-800 text-xs font-mono text-indigo-300">
               Output: Correlated Incident Dossier
             </div>
           </div>
 
-          <div className="p-5 rounded-xl bg-slate-900 border border-emerald-500/30 flex flex-col justify-between">
+          <div className="p-5 rounded-xl bg-slate-900/60 border border-emerald-500/30 flex flex-col justify-between">
             <div>
-              <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider">
+              <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
                 Stage 3 • Action & Audit
               </span>
-              <h3 className="text-base font-bold text-white mt-1">Containment & Reports</h3>
+              <h3 className="text-base font-bold text-white mt-1">Containment & Playbooks</h3>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Response Agent stages firewall rules; Report Agent compiles executive summaries and PDF.
+                Response Agent stages firewall rules; Report Agent compiles technical dossiers and PDF exports.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-300">
+            <div className="mt-4 pt-3 border-t border-slate-800 text-xs font-mono text-emerald-300">
               Output: Containment Action & Audit Log
             </div>
           </div>
@@ -167,7 +170,7 @@ export default function Agents() {
       </div>
 
       {/* 3. 7 Agent Dossiers Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {agents.map((agent) => {
           const info = AGENT_INFO[agent.id] || {
             icon: Bot,
@@ -184,19 +187,23 @@ export default function Agents() {
             <div
               key={agent.id}
               onClick={() => setSelected(agent)}
-              className={`card p-6 cursor-pointer flex flex-col justify-between transition ${
+              className={`glass-card p-6 cursor-pointer flex flex-col justify-between transition-all ${
                 isSelected
-                  ? 'border-blue-500 bg-blue-950/20 shadow-lg shadow-blue-500/10 ring-1 ring-blue-500/40'
+                  ? 'border-cyan-500/60 bg-slate-900/90 shadow-[0_0_25px_rgba(6,182,212,0.18)] ring-1 ring-cyan-500/30'
                   : 'hover:border-slate-700'
               }`}
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-blue-600/15 text-blue-400 flex items-center justify-center border border-blue-500/20">
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center border transition ${
+                    isSelected
+                      ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                      : 'bg-slate-900 text-slate-400 border-slate-800'
+                  }`}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <span className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono font-semibold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     ONLINE
                   </span>
                 </div>
@@ -209,9 +216,9 @@ export default function Agents() {
                 </p>
 
                 {/* Model & Latency tag */}
-                <div className="mt-4 p-2.5 bg-slate-900 rounded-lg border border-slate-800 flex items-center justify-between text-xs font-mono">
+                <div className="mt-4 p-2.5 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
                   <span className="text-slate-400 truncate">{info.model}</span>
-                  <span className="text-emerald-400 font-semibold shrink-0">{info.latency}</span>
+                  <span className="text-cyan-400 font-semibold shrink-0">{info.latency}</span>
                 </div>
 
                 {/* Skill Pills */}
@@ -219,7 +226,7 @@ export default function Agents() {
                   {info.skills.map((skill, i) => (
                     <span
                       key={i}
-                      className="text-[11px] px-2 py-0.5 rounded bg-slate-800/90 text-slate-300 border border-slate-700 font-medium"
+                      className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/80 font-medium"
                     >
                       {skill}
                     </span>
@@ -227,9 +234,9 @@ export default function Agents() {
                 </div>
               </div>
 
-              <div className="mt-5 pt-3.5 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+              <div className="mt-5 pt-3.5 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
                 <span>Precision: <strong className="text-white font-mono">{info.precision}</strong></span>
-                <span>Tasks: <strong className="text-white font-mono">{agent.total_analyses || 12}</strong></span>
+                <span>Tasks: <strong className="text-cyan-300 font-mono">{agent.total_analyses || 12}</strong></span>
               </div>
             </div>
           );
@@ -238,41 +245,41 @@ export default function Agents() {
 
       {/* 4. Selected Agent Telemetry Inspector */}
       {selected && (
-        <div className="card p-7 border-slate-800">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-4 border-b border-slate-800">
+        <div className="glass-card p-6 border-cyan-500/30 shadow-[0_0_25px_rgba(6,182,212,0.1)]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-4 border-b border-slate-800/80">
             <div>
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-3">
                 <h3 className="text-lg font-bold text-white">{selected.name}</h3>
-                <span className="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded border border-blue-500/20">
+                <span className="text-xs font-mono text-cyan-400 bg-cyan-500/10 px-2.5 py-0.5 rounded-lg border border-cyan-500/25">
                   {selected.id}
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-1">{selected.description}</p>
             </div>
-            <div className="flex items-center gap-2 text-xs font-mono text-emerald-400">
+            <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 font-semibold px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25">
               <CheckCircle2 className="w-4 h-4" />
-              <span>Consensus Ready</span>
+              <span>Consensus Engine Ready</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-xs">
-            <div className="p-3 bg-slate-900 rounded-lg">
-              <span className="text-slate-500 font-mono">Tasks Processed</span>
-              <p className="text-base font-bold text-white mt-1">{selected.total_analyses || 12}</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+            <div className="p-3.5 bg-slate-900/60 rounded-xl border border-slate-800">
+              <span className="text-slate-400 font-mono">Tasks Processed</span>
+              <p className="text-xl font-bold text-white mt-1 font-mono">{selected.total_analyses || 12}</p>
             </div>
-            <div className="p-3 bg-slate-900 rounded-lg">
-              <span className="text-slate-500 font-mono">Consensus Accuracy</span>
-              <p className="text-base font-bold text-emerald-400 mt-1">99.4%</p>
+            <div className="p-3.5 bg-slate-900/60 rounded-xl border border-slate-800">
+              <span className="text-slate-400 font-mono">Consensus Accuracy</span>
+              <p className="text-xl font-bold text-emerald-400 mt-1 font-mono">99.4%</p>
             </div>
-            <div className="p-3 bg-slate-900 rounded-lg">
-              <span className="text-slate-500 font-mono">Average Latency</span>
-              <p className="text-base font-bold text-blue-400 mt-1">
+            <div className="p-3.5 bg-slate-900/60 rounded-xl border border-slate-800">
+              <span className="text-slate-400 font-mono">Average Latency</span>
+              <p className="text-xl font-bold text-cyan-400 mt-1 font-mono">
                 {AGENT_INFO[selected.id]?.latency || '22ms'}
               </p>
             </div>
-            <div className="p-3 bg-slate-900 rounded-lg">
-              <span className="text-slate-500 font-mono">Heuristic Tuning</span>
-              <p className="text-base font-bold text-purple-300 mt-1">Active</p>
+            <div className="p-3.5 bg-slate-900/60 rounded-xl border border-slate-800">
+              <span className="text-slate-400 font-mono">Heuristic Tuning</span>
+              <p className="text-xl font-bold text-indigo-300 mt-1 font-mono">Autonomous</p>
             </div>
           </div>
         </div>

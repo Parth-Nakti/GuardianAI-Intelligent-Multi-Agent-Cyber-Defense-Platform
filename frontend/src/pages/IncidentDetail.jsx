@@ -65,17 +65,17 @@ export default function IncidentDetail() {
   if (loading) {
     return (
       <div className="py-28 text-center text-slate-400">
-        <RefreshCw className="w-8 h-8 animate-spin text-blue-400 mx-auto mb-3" />
+        <RefreshCw className="w-8 h-8 animate-spin text-cyan-400 mx-auto mb-3" />
         <h3 className="text-base font-bold text-white">Loading Forensic Dossier...</h3>
-        <p className="text-xs text-slate-500 mt-1">Retrieving cross-vector agent correlation</p>
+        <p className="text-xs text-slate-500 mt-1 font-mono">Retrieving cross-vector agent telemetry</p>
       </div>
     );
   }
 
   if (!incident) {
     return (
-      <div className="text-center py-20 card p-8 max-w-md mx-auto">
-        <AlertTriangle className="w-10 h-10 text-red-400 mx-auto mb-3" />
+      <div className="text-center py-20 glass-card p-8 max-w-md mx-auto">
+        <AlertTriangle className="w-10 h-10 text-rose-400 mx-auto mb-3" />
         <h2 className="text-lg font-bold text-white">Incident Record Not Found</h2>
         <p className="text-sm text-slate-400 mt-1">Incident #{id} could not be located in registry.</p>
         <button
@@ -101,20 +101,20 @@ export default function IncidentDetail() {
   ];
 
   return (
-    <div className="space-y-10 max-w-6xl mx-auto pb-16">
+    <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* 1. Header Banner */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
         <div className="flex items-start sm:items-center gap-4">
           <button
             onClick={() => navigate('/incidents')}
-            className="p-2.5 rounded-lg bg-slate-850 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition"
+            className="p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition"
             title="Back to incident list"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="font-mono text-xs font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded border border-blue-500/20">
+              <span className="font-mono text-xs font-bold text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-md border border-cyan-500/25">
                 {incident.incident_id || `#${incident.id}`}
               </span>
               <span className={`badge ${getBadge(incident.severity)}`}>
@@ -123,18 +123,18 @@ export default function IncidentDetail() {
               <span className="mitre-tag">
                 {getMitreTag(incident.incident_type, incident.title)}
               </span>
-              <span className="text-xs font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+              <span className="text-xs font-mono text-slate-400 bg-slate-900/80 px-2.5 py-1 rounded-md border border-slate-800">
                 Asset: {incident.source_file ? `srv-${incident.source_file.split('.')[0]}` : 'edge-gw-01'}
               </span>
             </div>
-            <h1 className="text-2xl font-extrabold text-white mt-2 tracking-tight">
+            <h1 className="text-2xl lg:text-3xl font-extrabold text-white mt-2 tracking-tight">
               {incident.title}
             </h1>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+          <div className="flex items-center gap-2 bg-slate-900/80 px-3 py-2 rounded-xl border border-slate-800">
             <span className="text-xs text-slate-400">Status:</span>
             <select
               value={incident.status}
@@ -151,7 +151,7 @@ export default function IncidentDetail() {
 
           <button
             onClick={() => navigate('/reports')}
-            className="btn btn-primary text-xs py-2 px-3.5"
+            className="btn btn-primary text-xs py-2 px-4 shadow-[0_0_15px_rgba(6,182,212,0.25)]"
           >
             <FileText className="w-3.5 h-3.5" />
             <span>Generate PDF</span>
@@ -160,19 +160,19 @@ export default function IncidentDetail() {
       </div>
 
       {/* 2. Key Forensic Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div className="card p-6 border-l-4 border-l-blue-500">
-          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
+        <div className="glass-card p-5 border-l-4 border-l-cyan-500">
+          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
             Swarm Consensus
           </span>
-          <p className="text-2xl font-extrabold text-blue-400 mt-2">
+          <p className="text-3xl font-extrabold text-cyan-400 mt-2 font-mono">
             {incident.correlation_score ? `${Math.round(incident.correlation_score * 100)}%` : '88%'}
           </p>
           <span className="text-xs text-slate-500 mt-1 block">Cross-vector validated</span>
         </div>
 
-        <div className="card p-6 border-l-4 border-l-red-500">
-          <span className="text-xs font-semibold text-red-400 uppercase tracking-wide">
+        <div className="glass-card p-5 border-l-4 border-l-rose-500">
+          <span className="text-xs font-semibold text-rose-300 uppercase tracking-wider">
             Telemetry Source
           </span>
           <p className="text-base font-bold text-white mt-2 truncate font-mono">
@@ -181,21 +181,21 @@ export default function IncidentDetail() {
           <span className="text-xs text-slate-500 mt-1 block">Inbound payload</span>
         </div>
 
-        <div className="card p-6 border-l-4 border-l-purple-500">
-          <span className="text-xs font-semibold text-purple-300 uppercase tracking-wide">
+        <div className="glass-card p-5 border-l-4 border-l-indigo-500">
+          <span className="text-xs font-semibold text-indigo-300 uppercase tracking-wider">
             Extracted IOCs
           </span>
-          <p className="text-2xl font-extrabold text-purple-300 mt-2">
+          <p className="text-3xl font-extrabold text-indigo-300 mt-2 font-mono">
             {indicators.length}
           </p>
           <span className="text-xs text-slate-500 mt-1 block">IPs, hashes & domains</span>
         </div>
 
-        <div className="card p-6 border-l-4 border-l-emerald-500">
-          <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wide">
+        <div className="glass-card p-5 border-l-4 border-l-emerald-500">
+          <span className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">
             Containment Actions
           </span>
-          <p className="text-2xl font-extrabold text-emerald-400 mt-2">
+          <p className="text-3xl font-extrabold text-emerald-400 mt-2 font-mono">
             {responseActions.length || 3}
           </p>
           <span className="text-xs text-slate-500 mt-1 block">Automated playbooks</span>
@@ -203,14 +203,14 @@ export default function IncidentDetail() {
       </div>
 
       {/* 3. Forensic Tabs */}
-      <div className="flex gap-2 border-b border-slate-800 pb-1 overflow-x-auto">
+      <div className="flex gap-2 border-b border-slate-800/80 pb-1 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2.5 text-sm font-medium transition border-b-2 whitespace-nowrap ${
               activeTab === tab.id
-                ? 'border-blue-500 text-white font-semibold'
+                ? 'border-cyan-400 text-cyan-300 font-semibold shadow-[0_4px_12px_rgba(6,182,212,0.15)]'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
@@ -222,15 +222,15 @@ export default function IncidentDetail() {
       {/* 4. Tab 1: Overview & Raw Forensic Artifacts */}
       {activeTab === 'overview' && (
         <div className="space-y-6">
-          <div className="card p-7">
+          <div className="glass-card p-6">
             <h3 className="text-base font-bold text-white mb-2">Threat Assessment Narrative</h3>
             <p className="text-sm text-slate-300 leading-relaxed">
               {incident.description || 'Automated multi-agent threat classification identified suspicious activity matching active cyber threat actor tradecraft.'}
             </p>
 
             {correlationData?.reasoning && (
-              <div className="mt-5 p-5 bg-slate-900 rounded-xl border border-slate-800">
-                <span className="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono block mb-1">
+              <div className="mt-5 p-5 bg-slate-900/80 rounded-xl border border-slate-800">
+                <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider font-mono block mb-1">
                   Cross-Vector Graph Correlation Engine
                 </span>
                 <p className="text-xs text-slate-300 leading-relaxed font-mono">{correlationData.reasoning}</p>
@@ -239,19 +239,19 @@ export default function IncidentDetail() {
           </div>
 
           {incident.evidence?.length > 0 && (
-            <div className="card p-7">
+            <div className="glass-card p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-bold text-white flex items-center gap-2">
                   <Terminal className="w-4 h-4 text-emerald-400" />
                   Forensic Telemetry Artifacts
                 </h3>
-                <span className="text-xs font-mono text-slate-500">Live Ingested Lines</span>
+                <span className="text-xs font-mono text-slate-500">Live Telemetry Ingestion</span>
               </div>
               <div className="space-y-2">
                 {incident.evidence.map((ev, i) => (
                   <div
                     key={i}
-                    className="p-3 bg-slate-950 rounded-lg border border-slate-800 font-mono text-xs text-emerald-400 overflow-x-auto"
+                    className="p-3 bg-slate-950/80 rounded-xl border border-slate-800 font-mono text-xs text-emerald-400 overflow-x-auto"
                   >
                     {typeof ev === 'object' ? JSON.stringify(ev, null, 2) : ev}
                   </div>
@@ -266,12 +266,12 @@ export default function IncidentDetail() {
       {activeTab === 'findings' && (
         <div className="space-y-4">
           {agentFindings.length === 0 ? (
-            <div className="card p-12 text-center text-slate-400 text-sm">No distinct agent findings attached.</div>
+            <div className="glass-card p-12 text-center text-slate-400 text-sm">No distinct agent findings attached.</div>
           ) : (
             agentFindings.map((f, i) => (
-              <div key={i} className="card p-6 border-l-4 border-l-blue-500">
+              <div key={i} className="glass-card p-6 border-l-4 border-l-cyan-500">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-blue-400 flex items-center gap-1.5 font-mono">
+                  <span className="text-xs font-bold text-cyan-400 flex items-center gap-1.5 font-mono">
                     <Cpu className="w-3.5 h-3.5" />
                     {f.agent_name || `Security Agent #${i + 1}`}
                   </span>
@@ -293,18 +293,18 @@ export default function IncidentDetail() {
 
       {/* Tab 3: Discovered IOCs */}
       {activeTab === 'iocs' && (
-        <div className="card overflow-hidden">
-          <div className="px-7 py-5 border-b border-slate-800 bg-[#0d121f]">
+        <div className="glass-card overflow-hidden">
+          <div className="px-6 py-4 border-b border-slate-800 bg-slate-900/50">
             <h3 className="text-base font-bold text-white">Extracted Indicators of Compromise</h3>
             <p className="text-xs text-slate-400 mt-0.5">Known malicious IP addresses, domain names, and file hashes</p>
           </div>
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-800 text-left">
-                <th className="py-4 px-6 text-xs font-semibold text-slate-400 font-mono">Indicator Value</th>
-                <th className="py-4 px-5 text-xs font-semibold text-slate-400">Type</th>
-                <th className="py-4 px-5 text-xs font-semibold text-slate-400">Risk Level</th>
-                <th className="py-4 px-6 text-xs font-semibold text-slate-400">Threat Attribution</th>
+              <tr>
+                <th>INDICATOR VALUE</th>
+                <th>TYPE</th>
+                <th>RISK LEVEL</th>
+                <th>THREAT ATTRIBUTION</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60">
@@ -315,18 +315,18 @@ export default function IncidentDetail() {
               ) : (
                 indicators.map((ioc, i) => (
                   <tr key={i} className="hover:bg-slate-800/30">
-                    <td className="py-4 px-6 font-mono text-xs font-bold text-blue-400">
+                    <td className="font-mono text-xs font-bold text-cyan-400">
                       {typeof ioc === 'object' ? ioc.value : ioc}
                     </td>
-                    <td className="py-4 px-5 text-xs text-slate-300 uppercase">
+                    <td className="text-xs text-slate-300 uppercase">
                       {typeof ioc === 'object' ? ioc.type || 'IP' : 'IOC'}
                     </td>
-                    <td className="py-4 px-5">
+                    <td>
                       <span className="badge badge-high text-xs">
                         {typeof ioc === 'object' ? ioc.risk_level || 'HIGH' : 'SUSPICIOUS'}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-xs text-slate-300">
+                    <td className="text-xs text-slate-300">
                       {typeof ioc === 'object' ? ioc.category || 'Identified Threat' : 'Known Malicious Artifact'}
                     </td>
                   </tr>
@@ -341,7 +341,7 @@ export default function IncidentDetail() {
       {activeTab === 'playbook' && (
         <div className="space-y-4">
           {responseActions.length === 0 ? (
-            <div className="card p-12 text-center text-slate-400 text-sm">No response actions staged.</div>
+            <div className="glass-card p-12 text-center text-slate-400 text-sm">No response actions staged.</div>
           ) : (
             responseActions.map((action, i) => {
               const isObj = typeof action === 'object';
@@ -349,10 +349,10 @@ export default function IncidentDetail() {
               return (
                 <div
                   key={i}
-                  className="card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5"
+                  className="glass-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5"
                 >
                   <div className="flex items-start gap-3.5">
-                    <span className="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 text-xs font-bold flex items-center justify-center shrink-0 font-mono mt-0.5 border border-blue-500/30">
+                    <span className="w-8 h-8 rounded-xl bg-cyan-500/15 text-cyan-300 text-xs font-bold flex items-center justify-center shrink-0 font-mono mt-0.5 border border-cyan-500/30">
                       {i + 1}
                     </span>
                     <div>
@@ -384,7 +384,7 @@ export default function IncidentDetail() {
                       </>
                     ) : (
                       <>
-                        <Play className="w-3.5 h-3.5" /> Execute Playbook
+                        <Play className="w-3.5 h-3.5 fill-current" /> Execute Playbook
                       </>
                     )}
                   </button>

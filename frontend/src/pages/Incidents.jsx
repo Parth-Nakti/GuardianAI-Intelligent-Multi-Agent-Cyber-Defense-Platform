@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search, RefreshCw, Shield, ArrowRight, Filter,
-  AlertTriangle, Terminal, Mail, Network, FileCode, CheckCircle2, Clock
+  AlertTriangle, Terminal, Mail, Network, FileCode, CheckCircle2, Clock, Activity
 } from 'lucide-react';
 import { getIncidents, updateIncidentStatus } from '../services/api';
 
@@ -85,11 +85,13 @@ export default function Incidents() {
   };
 
   return (
-    <div className="space-y-10 max-w-6xl mx-auto pb-16">
+    <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* 1. Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800/60">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Security Incident Queue</h1>
+          <h1 className="text-2xl lg:text-3xl font-extrabold text-white tracking-tight bg-gradient-to-r from-white via-slate-100 to-cyan-300 bg-clip-text text-transparent">
+            Security Incident Queue
+          </h1>
           <p className="text-slate-400 text-sm mt-1">
             Prioritized threat queue categorized with MITRE ATT&CK techniques and autonomous containment staging
           </p>
@@ -98,42 +100,42 @@ export default function Incidents() {
         <button
           onClick={fetchIncidents}
           disabled={loading}
-          className="btn btn-ghost text-xs py-2 px-3.5 text-slate-300 self-start sm:self-auto"
+          className="btn btn-ghost text-xs py-2 px-3.5 self-start sm:self-auto"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-cyan-400' : ''}`} />
           Refresh Queue
         </button>
       </div>
 
       {/* 2. Key Triage Metrics Summary Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-        <div className="card p-5">
-          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Total Incidents</span>
-          <p className="text-2xl font-extrabold text-white mt-1">{incidents.length}</p>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
+        <div className="glass-card p-5">
+          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Incidents</span>
+          <p className="text-3xl font-extrabold text-white mt-1 font-mono">{incidents.length}</p>
           <span className="text-xs text-slate-500 mt-1 block">Active Ingestion</span>
         </div>
 
-        <div className="card p-5">
-          <span className="text-xs font-semibold text-red-400 uppercase tracking-wide">Critical Alerts</span>
-          <p className="text-2xl font-extrabold text-red-400 mt-1">{criticalCount}</p>
+        <div className="glass-card p-5">
+          <span className="text-xs font-semibold text-rose-300 uppercase tracking-wider">Critical Alerts</span>
+          <p className="text-3xl font-extrabold text-rose-400 mt-1 font-mono">{criticalCount}</p>
           <span className="text-xs text-slate-500 mt-1 block">Immediate SLA</span>
         </div>
 
-        <div className="card p-5">
-          <span className="text-xs font-semibold text-purple-400 uppercase tracking-wide">In Investigation</span>
-          <p className="text-2xl font-extrabold text-purple-300 mt-1">{openCount}</p>
+        <div className="glass-card p-5">
+          <span className="text-xs font-semibold text-indigo-300 uppercase tracking-wider">In Investigation</span>
+          <p className="text-3xl font-extrabold text-indigo-300 mt-1 font-mono">{openCount}</p>
           <span className="text-xs text-slate-500 mt-1 block">Swarm Triage</span>
         </div>
 
-        <div className="card p-5">
-          <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wide">MTTD (Detection)</span>
-          <p className="text-2xl font-extrabold text-emerald-400 mt-1">3.8s</p>
+        <div className="glass-card p-5">
+          <span className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">MTTD (Detection)</span>
+          <p className="text-3xl font-extrabold text-emerald-400 mt-1 font-mono">3.8s</p>
           <span className="text-xs text-slate-500 mt-1 block">Autonomous Engine</span>
         </div>
       </div>
 
       {/* 3. Search & Filter Bar */}
-      <div className="card p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="glass-card p-5 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Search Input */}
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -142,22 +144,22 @@ export default function Incidents() {
             placeholder="Search incident ID, title, or asset..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-lg bg-slate-900 border border-slate-700/80 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-blue-500"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/30"
           />
         </div>
 
         {/* Filter Badges */}
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           {/* Severity Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto">
+          <div className="flex items-center gap-1.5 overflow-x-auto bg-slate-900/60 p-1 rounded-xl border border-slate-800">
             {['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map((sev) => (
               <button
                 key={sev}
                 onClick={() => setSeverityFilter(sev)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
                   severityFilter === sev
-                    ? 'bg-blue-600 text-white font-semibold shadow-sm'
-                    : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                    ? 'bg-cyan-500/20 text-cyan-300 font-semibold shadow-sm'
+                    : 'text-slate-400 hover:text-white'
                 }`}
               >
                 {sev === 'ALL' ? 'All' : sev.charAt(0) + sev.slice(1).toLowerCase()}
@@ -169,7 +171,7 @@ export default function Incidents() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs font-medium text-slate-200 focus:outline-none focus:border-blue-500"
+            className="px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-800 text-xs font-medium text-slate-200 focus:outline-none focus:border-cyan-500/60"
           >
             <option value="ALL">All Statuses</option>
             <option value="Investigating">Investigating</option>
@@ -181,15 +183,15 @@ export default function Incidents() {
       </div>
 
       {/* 4. Enterprise Data Table */}
-      <div className="card overflow-hidden">
+      <div className="glass-card overflow-hidden">
         {loading ? (
           <div className="py-20 text-center text-slate-400">
-            <RefreshCw className="w-6 h-6 text-blue-400 animate-spin mx-auto mb-2" />
+            <RefreshCw className="w-7 h-7 text-cyan-400 animate-spin mx-auto mb-3" />
             <p className="text-sm">Loading incident registry...</p>
           </div>
         ) : filtered.length === 0 ? (
           <div className="py-20 text-center text-slate-400">
-            <Shield className="w-10 h-10 text-slate-600 mx-auto mb-2" />
+            <Shield className="w-12 h-12 text-slate-700 mx-auto mb-3" />
             <h4 className="text-base font-semibold text-white">No Incidents Match Filter</h4>
             <p className="text-xs text-slate-500 mt-1">Try resetting search keywords or severity criteria</p>
           </div>
@@ -197,14 +199,14 @@ export default function Incidents() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-800 text-left">
-                  <th className="py-4 px-6 text-xs font-semibold text-slate-400 font-mono">Incident ID</th>
-                  <th className="py-4 px-5 text-xs font-semibold text-slate-400">Threat Title & Vector</th>
-                  <th className="py-4 px-5 text-xs font-semibold text-slate-400">MITRE Technique</th>
-                  <th className="py-4 px-5 text-xs font-semibold text-slate-400">Target Asset</th>
-                  <th className="py-4 px-5 text-xs font-semibold text-slate-400">Severity</th>
-                  <th className="py-4 px-5 text-xs font-semibold text-slate-400">Status</th>
-                  <th className="py-4 px-6 text-right text-xs font-semibold text-slate-400">Action</th>
+                <tr>
+                  <th>INCIDENT ID</th>
+                  <th>THREAT TITLE & VECTOR</th>
+                  <th>MITRE TECHNIQUE</th>
+                  <th>TARGET ASSET</th>
+                  <th>SEVERITY</th>
+                  <th>STATUS</th>
+                  <th className="text-right">ACTION</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60">
@@ -215,46 +217,46 @@ export default function Incidents() {
                     className="hover:bg-slate-800/40 cursor-pointer transition group"
                   >
                     {/* ID */}
-                    <td className="py-4 px-6">
-                      <span className="font-mono text-xs font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded border border-blue-500/20">
+                    <td>
+                      <span className="font-mono text-xs font-bold text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-md border border-cyan-500/25">
                         {inc.incident_id || `#${inc.id}`}
                       </span>
                     </td>
 
                     {/* Threat Title */}
-                    <td className="py-4 px-5">
-                      <p className="text-sm font-semibold text-white group-hover:text-blue-300 transition">
+                    <td>
+                      <p className="text-sm font-semibold text-white group-hover:text-cyan-300 transition">
                         {inc.title}
                       </p>
                       <p className="text-xs text-slate-400 mt-0.5">{inc.incident_type}</p>
                     </td>
 
                     {/* MITRE */}
-                    <td className="py-4 px-5">
+                    <td>
                       <span className="mitre-tag">
                         {getMitreTag(inc.incident_type, inc.title)}
                       </span>
                     </td>
 
                     {/* Target Asset */}
-                    <td className="py-4 px-5 font-mono text-xs text-slate-300">
+                    <td className="font-mono text-xs text-slate-300">
                       {getTargetAsset(inc.incident_id, inc.title)}
                     </td>
 
                     {/* Severity */}
-                    <td className="py-4 px-5">
+                    <td>
                       <span className={`badge ${getBadgeClass(inc.severity)}`}>
                         {inc.severity}
                       </span>
                     </td>
 
                     {/* Status Dropdown */}
-                    <td className="py-4 px-5" onClick={(e) => e.stopPropagation()}>
+                    <td onClick={(e) => e.stopPropagation()}>
                       <select
                         value={inc.status}
                         disabled={updatingId === inc.id}
                         onChange={(e) => handleStatusChange(e, inc.id, e.target.value)}
-                        className="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-700 text-xs font-medium text-slate-200 focus:outline-none focus:border-blue-500"
+                        className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs font-medium text-slate-200 focus:outline-none focus:border-cyan-500"
                       >
                         <option value="Investigating">Investigating</option>
                         <option value="Open">Open</option>
@@ -264,8 +266,8 @@ export default function Incidents() {
                     </td>
 
                     {/* Action */}
-                    <td className="py-4 px-6 text-right">
-                      <span className="text-xs font-semibold text-blue-400 group-hover:text-blue-300 group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1">
+                    <td className="text-right">
+                      <span className="text-xs font-semibold text-cyan-400 group-hover:text-cyan-300 group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1">
                         Investigate <ArrowRight className="w-3.5 h-3.5" />
                       </span>
                     </td>

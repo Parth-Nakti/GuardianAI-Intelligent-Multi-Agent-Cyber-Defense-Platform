@@ -1,28 +1,94 @@
 @import "tailwindcss";
 
-/* SentinelAI — Enterprise Cyber Defense System Tokens */
-:root {
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
-  
-  /* Surface colors */
-  --bg-primary: #0a0e17;
-  --bg-sidebar: #0e1422;
-  --bg-surface: #111726;
-  --bg-surface-elevated: #161f36;
-  --bg-surface-hover: #1a2540;
-  
-  /* Borders */
-  --border-subtle: #1c2438;
-  --border-medium: #27344f;
-  --border-accent: #3b82f6;
+/* ============================================================
+   SentinelAI — Next-Gen Cyber Defense Operations Console
+   Dual Theme System: Deep Cyber Dark & Executive Day Mode
+   Typography: Plus Jakarta Sans & Outfit
+   ============================================================ */
 
-  /* Typography */
+:root, [data-theme="dark"] {
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* ── Canvas & Surface (Dark) ── */
+  --bg-deep: #060a14;
+  --bg-canvas: #080d1b;
+  --bg-sidebar: #090e1f;
+  --bg-topbar: rgba(9, 14, 31, 0.85);
+  --bg-card: rgba(13, 22, 44, 0.72);
+  --bg-card-hover: rgba(18, 30, 58, 0.88);
+  --bg-elevated: #0f1a32;
+  --bg-inset: rgba(6, 10, 20, 0.8);
+  --bg-input: rgba(10, 16, 32, 0.85);
+
+  /* ── Glass & Borders (Dark) ── */
+  --glass-border: rgba(56, 189, 248, 0.15);
+  --glass-border-hover: rgba(56, 189, 248, 0.4);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+
+  /* ── Typography Colors (Dark) ── */
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
+  --text-heading: #ffffff;
+
+  /* ── Shadows (Dark) ── */
+  --card-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.5);
+  --card-shadow-hover: 0 14px 38px -6px rgba(0, 0, 0, 0.65), 0 0 25px -4px rgba(6, 182, 212, 0.15);
+
+  /* ── Table & Inputs (Dark) ── */
+  --table-th-bg: rgba(10, 16, 32, 0.7);
+  --table-row-hover: rgba(30, 41, 59, 0.4);
+
+  /* ── Ambient Glow (Dark) ── */
+  --ambient-grad-1: rgba(6, 182, 212, 0.08);
+  --ambient-grad-2: rgba(99, 102, 241, 0.06);
 }
 
+[data-theme="light"] {
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* ── Canvas & Surface (Day / Light) ── */
+  --bg-deep: #f8fafc;
+  --bg-canvas: #f1f5f9;
+  --bg-sidebar: #ffffff;
+  --bg-topbar: rgba(255, 255, 255, 0.88);
+  --bg-card: #ffffff;
+  --bg-card-hover: #ffffff;
+  --bg-elevated: #f8fafc;
+  --bg-inset: #f1f5f9;
+  --bg-input: #ffffff;
+
+  /* ── Glass & Borders (Day / Light) ── */
+  --glass-border: rgba(6, 182, 212, 0.35);
+  --glass-border-hover: rgba(6, 182, 212, 0.55);
+  --border-subtle: rgba(226, 232, 240, 0.95);
+  --border-medium: rgba(203, 213, 225, 0.95);
+
+  /* ── Typography Colors (Day / Light) ── */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-heading: #0f172a;
+
+  /* ── Shadows (Day / Light) ── */
+  --card-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 1px 4px -1px rgba(15, 23, 42, 0.04);
+  --card-shadow-hover: 0 12px 30px -4px rgba(15, 23, 42, 0.1), 0 0 20px -2px rgba(6, 182, 212, 0.12);
+
+  /* ── Table & Inputs (Day / Light) ── */
+  --table-th-bg: #f8fafc;
+  --table-row-hover: rgba(241, 245, 249, 0.85);
+
+  /* ── Ambient Glow (Day / Light) ── */
+  --ambient-grad-1: rgba(6, 182, 212, 0.06);
+  --ambient-grad-2: rgba(99, 102, 241, 0.04);
+}
+
+/* ── Global Reset ── */
 * {
   margin: 0;
   padding: 0;
@@ -32,38 +98,49 @@
 html, body, #root {
   height: 100%;
   width: 100%;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-deep);
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* Custom Scrollbars */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.015em;
+  color: var(--text-heading);
+}
+
+/* ── Scrollbars ── */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: var(--bg-deep);
 }
 ::-webkit-scrollbar-thumb {
-  background: #222d42;
-  border-radius: 4px;
+  background: var(--border-medium);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334363;
+  background: #06b6d4;
 }
 
-/* App Shell Layout */
+/* ── Layout Shell ── */
 .app-layout {
   display: flex;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-deep);
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, var(--ambient-grad-1), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 90% 90%, var(--ambient-grad-2), transparent 60%);
+  transition: background-color 0.25s ease;
 }
 
 .main-content {
@@ -73,6 +150,7 @@ html, body, #root {
   height: 100vh;
   overflow: hidden;
   min-width: 0;
+  position: relative;
 }
 
 .page-content {
@@ -80,188 +158,279 @@ html, body, #root {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 32px 40px;
-  background: radial-gradient(circle at 80% 0%, rgba(37, 99, 235, 0.04), transparent 500px),
-              radial-gradient(circle at 10% 100%, rgba(16, 185, 129, 0.03), transparent 500px);
+  background: transparent;
 }
 
-/* Enterprise Card Design */
-.card {
-  background: var(--bg-surface);
+@media (max-width: 768px) {
+  .page-content {
+    padding: 20px 16px;
+  }
+}
+
+/* ── Modern Glass Card ── */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 18px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.glass-card-interactive {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--glass-border);
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* ── Compatibility Card ── */
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s ease;
 }
 
 .card:hover {
   border-color: var(--border-medium);
 }
 
-.card-elevated {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-medium);
-}
-
-.card-interactive:hover {
-  border-color: rgba(59, 130, 246, 0.6);
-  box-shadow: 0 8px 30px -4px rgba(59, 130, 246, 0.12);
-  transform: translateY(-2px);
-}
-
-/* Severity & Status Badges */
+/* ── Modern Badges ── */
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 10px;
-  border-radius: 6px;
-  font-size: 11px;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 11.5px;
   font-weight: 700;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  transition: all 0.2s ease;
 }
 
 .badge-critical {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(244, 63, 94, 0.14);
+  color: #f43f5e;
+  border: 1px solid rgba(244, 63, 94, 0.35);
+}
+[data-theme="dark"] .badge-critical {
+  color: #fda4af;
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.18);
 }
 
 .badge-high {
-  background: rgba(249, 115, 22, 0.15);
-  color: #fdba74;
+  background: rgba(249, 115, 22, 0.14);
+  color: #ea580c;
   border: 1px solid rgba(249, 115, 22, 0.35);
+}
+[data-theme="dark"] .badge-high {
+  color: #fdba74;
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.18);
 }
 
 .badge-medium {
-  background: rgba(234, 179, 8, 0.15);
-  color: #fde047;
-  border: 1px solid rgba(234, 179, 8, 0.35);
+  background: rgba(245, 158, 11, 0.14);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+[data-theme="dark"] .badge-medium {
+  color: #fde68a;
 }
 
 .badge-low {
-  background: rgba(6, 182, 212, 0.15);
-  color: #67e8f9;
+  background: rgba(6, 182, 212, 0.14);
+  color: #0284c7;
   border: 1px solid rgba(6, 182, 212, 0.35);
+}
+[data-theme="dark"] .badge-low {
+  color: #a5f3fc;
 }
 
 .badge-open {
-  background: rgba(99, 102, 241, 0.15);
-  color: #c7d2fe;
+  background: rgba(99, 102, 241, 0.14);
+  color: #4f46e5;
   border: 1px solid rgba(99, 102, 241, 0.35);
+}
+[data-theme="dark"] .badge-open {
+  color: #c7d2fe;
 }
 
 .badge-investigating {
-  background: rgba(168, 85, 247, 0.15);
-  color: #e9d5ff;
+  background: rgba(168, 85, 247, 0.14);
+  color: #9333ea;
   border: 1px solid rgba(168, 85, 247, 0.35);
+}
+[data-theme="dark"] .badge-investigating {
+  color: #e9d5ff;
 }
 
 .badge-resolved {
-  background: rgba(16, 185, 129, 0.15);
-  color: #a7f3d0;
+  background: rgba(16, 185, 129, 0.14);
+  color: #059669;
   border: 1px solid rgba(16, 185, 129, 0.35);
 }
+[data-theme="dark"] .badge-resolved {
+  color: #a7f3d0;
+}
 
-/* MITRE ATT&CK Tag */
+.badge-indigo {
+  background: rgba(99, 102, 241, 0.14);
+  color: #4f46e5;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}
+[data-theme="dark"] .badge-indigo {
+  color: #c7d2fe;
+}
+
+.badge-emerald {
+  background: rgba(16, 185, 129, 0.14);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+[data-theme="dark"] .badge-emerald {
+  color: #a7f3d0;
+}
+
+/* ── MITRE ATT&CK Tag ── */
 .mitre-tag {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  background: rgba(148, 163, 184, 0.1);
-  color: #94a3b8;
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: rgba(6, 182, 212, 0.1);
+  color: #0284c7;
+  border: 1px solid rgba(6, 182, 212, 0.25);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 600;
 }
+[data-theme="dark"] .mitre-tag {
+  color: #67e8f9;
+}
 
-/* Standard Buttons */
+/* ── Modern Buttons ── */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
+  padding: 9px 20px;
+  border-radius: 12px;
+  font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   border: none;
   outline: none;
+  font-family: var(--font-sans);
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
 
 .btn-primary {
-  background: #2563eb;
+  background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 3px 14px rgba(6, 182, 212, 0.35);
 }
+
 .btn-primary:hover {
-  background: #3b82f6;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+  background: linear-gradient(135deg, #22d3ee 0%, #0369a1 100%);
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
-  background: #1c2438;
-  color: #e2e8f0;
-  border: 1px solid #2d3b59;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
 }
+
 .btn-secondary:hover {
-  background: #25314d;
-  color: #ffffff;
-  border-color: #3b82f6;
+  background: var(--bg-card-hover);
+  border-color: #06b6d4;
 }
 
 .btn-ghost {
   background: transparent;
-  color: #94a3b8;
-  border: 1px solid #27344f;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
 }
+
 .btn-ghost:hover {
-  background: #1c2438;
-  color: #f8fafc;
-  border-color: #3b4c6e;
+  background: var(--bg-inset);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
 }
 
 .btn-danger {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: rgba(244, 63, 94, 0.12);
+  color: #f43f5e;
+  border: 1px solid rgba(244, 63, 94, 0.3);
 }
+
 .btn-danger:hover {
-  background: rgba(239, 68, 68, 0.25);
+  background: rgba(244, 63, 94, 0.22);
 }
 
 .btn-success {
-  background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.4);
-}
-.btn-success:hover {
-  background: rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
-/* Data Tables */
+.btn-success:hover {
+  background: rgba(16, 185, 129, 0.22);
+}
+
+/* ── Modern High-End Data Table ── */
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 th {
   text-align: left;
-  font-weight: 600;
-  color: #64748b;
-  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-size: 11.5px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: #0d121f;
+  letter-spacing: 0.07em;
+  font-family: var(--font-sans);
+  background: var(--table-th-bg);
+  padding: 14px 20px;
 }
 
 td {
   font-size: 14px;
-  color: #f1f5f9;
+  color: var(--text-primary);
+  padding: 16px 20px;
+}
+
+tr:hover td {
+  background-color: var(--table-row-hover);
 }
