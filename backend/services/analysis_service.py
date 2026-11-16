@@ -24,7 +24,7 @@ async def analyze_pcap(db: AsyncSession, file_path: str, filename: str) -> dict:
     # Create analysis session
     session = AnalysisSession(session_type="pcap", filename=filename, status="parsing", progress=10)
     db.add(session)
-    await db.flush()
+    await db.commit()
 
     try:
         # Step 1: Parse PCAP
@@ -34,7 +34,7 @@ async def analyze_pcap(db: AsyncSession, file_path: str, filename: str) -> dict:
         if "error" in parsed_data and not parsed_data.get("total_packets"):
             session.status = "failed"
             session.error_message = parsed_data.get("error", "Parse error")
-            await db.flush()
+            await db.commit()
             return {"error": parsed_data["error"], "session_id": session.id}
 
         session.status = "analyzing"
@@ -44,7 +44,7 @@ async def analyze_pcap(db: AsyncSession, file_path: str, filename: str) -> dict:
             "protocols": parsed_data.get("protocols", {}),
             "unique_ips": len(parsed_data.get("unique_ips", [])),
         }
-        await db.flush()
+        await db.commit()
 
         # Step 2: Run agent pipeline
         logger.info("Running network analysis pipeline...")
@@ -52,7 +52,7 @@ async def analyze_pcap(db: AsyncSession, file_path: str, filename: str) -> dict:
 
         session.progress = 70
         session.status = "correlating"
-        await db.flush()
+        await db.commit()
 
         # Step 3: Create incident if threats detected
         incident = None
@@ -106,7 +106,7 @@ async def analyze_pcap(db: AsyncSession, file_path: str, filename: str) -> dict:
             # Generate report
             logger.info("Generating report...")
             session.progress = 85
-            await db.flush()
+            await db.commit()
 
             report_result = await manager.generate_report(
                 {
@@ -151,7 +151,7 @@ async def analyze_pcap(db: AsyncSession, file_path: str, filename: str) -> dict:
              "severity": r.get("severity"), "threat_type": r.get("threat_type")}
             for r in pipeline_results["agent_results"]
         ]
-        await db.flush()
+        await db.commit()
 
         return {
             "session_id": session.id,
@@ -165,7 +165,7 @@ async def analyze_pcap(db: AsyncSession, file_path: str, filename: str) -> dict:
         logger.error(f"PCAP analysis failed: {e}")
         session.status = "failed"
         session.error_message = str(e)
-        await db.flush()
+        await db.commit()
         return {"error": str(e), "session_id": session.id}
 
 
@@ -175,7 +175,7 @@ async def analyze_email_file(db: AsyncSession, file_path: str, filename: str) ->
 
     session = AnalysisSession(session_type="email", filename=filename, status="parsing", progress=10)
     db.add(session)
-    await db.flush()
+    await db.commit()
 
     try:
         # Parse email
@@ -183,19 +183,19 @@ async def analyze_email_file(db: AsyncSession, file_path: str, filename: str) ->
         if "error" in parsed_data:
             session.status = "failed"
             session.error_message = parsed_data["error"]
-            await db.flush()
+            await db.commit()
             return {"error": parsed_data["error"], "session_id": session.id}
 
         session.status = "analyzing"
         session.progress = 30
-        await db.flush()
+        await db.commit()
 
         # Run pipeline
         pipeline_results = await manager.run_email_analysis(parsed_data)
 
         session.progress = 70
         session.status = "correlating"
-        await db.flush()
+        await db.commit()
 
         # Create incident
         incident = None
@@ -248,7 +248,7 @@ async def analyze_email_file(db: AsyncSession, file_path: str, filename: str) ->
 
             # Generate report
             session.progress = 85
-            await db.flush()
+            await db.commit()
 
             report_result = await manager.generate_report(
                 {
@@ -292,7 +292,7 @@ async def analyze_email_file(db: AsyncSession, file_path: str, filename: str) ->
              "severity": r.get("severity"), "threat_type": r.get("threat_type")}
             for r in pipeline_results["agent_results"]
         ]
-        await db.flush()
+        await db.commit()
 
         return {
             "session_id": session.id,
@@ -306,7 +306,7 @@ async def analyze_email_file(db: AsyncSession, file_path: str, filename: str) ->
         logger.error(f"Email analysis failed: {e}")
         session.status = "failed"
         session.error_message = str(e)
-        await db.flush()
+        await db.commit()
         return {"error": str(e), "session_id": session.id}
 
 
@@ -316,25 +316,25 @@ async def analyze_log_file(db: AsyncSession, file_path: str, filename: str) -> d
 
     session = AnalysisSession(session_type="log", filename=filename, status="parsing", progress=10)
     db.add(session)
-    await db.flush()
+    await db.commit()
 
     try:
         parsed_data = parse_logs(file_path)
         if "error" in parsed_data:
             session.status = "failed"
             session.error_message = parsed_data["error"]
-            await db.flush()
+            await db.commit()
             return {"error": parsed_data["error"], "session_id": session.id}
 
         session.status = "analyzing"
         session.progress = 30
-        await db.flush()
+        await db.commit()
 
         pipeline_results = await manager.run_log_analysis(parsed_data)
 
         session.progress = 70
         session.status = "correlating"
-        await db.flush()
+        await db.commit()
 
         incident = None
         threats_found = sum(1 for r in pipeline_results["agent_results"] if r.get("threat_detected"))
@@ -399,7 +399,7 @@ async def analyze_log_file(db: AsyncSession, file_path: str, filename: str) -> d
 
             # Generate report
             session.progress = 85
-            await db.flush()
+            await db.commit()
 
             report_result = await manager.generate_report(
                 {
@@ -443,7 +443,7 @@ async def analyze_log_file(db: AsyncSession, file_path: str, filename: str) -> d
              "severity": r.get("severity"), "threat_type": r.get("threat_type")}
             for r in pipeline_results["agent_results"]
         ]
-        await db.flush()
+        await db.commit()
 
         return {
             "session_id": session.id,
@@ -457,5 +457,5 @@ async def analyze_log_file(db: AsyncSession, file_path: str, filename: str) -> d
         logger.error(f"Log analysis failed: {e}")
         session.status = "failed"
         session.error_message = str(e)
-        await db.flush()
+        await db.commit()
         return {"error": str(e), "session_id": session.id}
