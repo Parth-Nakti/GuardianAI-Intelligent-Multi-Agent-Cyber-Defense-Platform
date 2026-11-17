@@ -105,13 +105,24 @@ async def get_incident_stats(db: AsyncSession) -> dict:
     total = await db.execute(select(func.count(Incident.id)))
     total_count = total.scalar() or 0
 
-    # By severity
+    # By severity (all incidents)
     severity_counts = {}
     for sev in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
         r = await db.execute(
             select(func.count(Incident.id)).where(Incident.severity == sev)
         )
         severity_counts[sev.lower()] = r.scalar() or 0
+
+    # By severity — only active (non-Closed, non-Resolved) incidents
+    active_severity_counts = {}
+    for sev in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
+        r = await db.execute(
+            select(func.count(Incident.id)).where(
+                Incident.severity == sev,
+                Incident.status.notin_(["Closed", "Resolved"]),
+            )
+        )
+        active_severity_counts[sev.lower()] = r.scalar() or 0
 
     # By status
     status_counts = {}
@@ -145,9 +156,19 @@ async def get_incident_stats(db: AsyncSession) -> dict:
         for inc in recent
     ]
 
+    # Active (non-closed/resolved) incident count
+    active_total = await db.execute(
+        select(func.count(Incident.id)).where(
+            Incident.status.notin_(["Closed", "Resolved"])
+        )
+    )
+    active_total_count = active_total.scalar() or 0
+
     return {
         "total_incidents": total_count,
+        "active_incidents": active_total_count,
         "severity": severity_counts,
+        "active_severity": active_severity_counts,
         "status": status_counts,
         "types": type_counts,
         "recent_incidents": recent_list,

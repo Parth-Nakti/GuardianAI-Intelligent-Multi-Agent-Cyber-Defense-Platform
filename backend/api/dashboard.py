@@ -24,7 +24,9 @@ async def dashboard_stats(db: AsyncSession = Depends(get_db)):
     return {
         "total_events": total_events,
         "threats_detected": incident_stats["total_incidents"],
+        "active_threats": incident_stats["active_incidents"],
         "severity": incident_stats["severity"],
+        "active_severity": incident_stats["active_severity"],
         "status": incident_stats["status"],
         "types": incident_stats["types"],
         "recent_incidents": incident_stats["recent_incidents"],

@@ -35,11 +35,12 @@ export default function Dashboard({ stats, onRefresh }) {
   };
 
   const s = stats?.severity || {};
+  const as_ = stats?.active_severity || s;
   const recent = stats?.recent_incidents || [];
   const totalThreats = stats?.threats_detected || 0;
-  const criticalCount = s.critical || 0;
-  const highCount = s.high || 0;
-  const activeCount = stats?.active_investigations || 0;
+  const criticalCount = as_.critical || 0;
+  const highCount = as_.high || 0;
+  const activeCount = stats?.active_threats ?? stats?.active_investigations ?? 0;
 
   const timelineData = [
     { time: '00:00', threats: Math.max(0, Math.floor(totalThreats * 0.1)) },

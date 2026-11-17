@@ -227,13 +227,17 @@ export default function Agents() {
             <div className="p-3 bg-elevated rounded-lg border border-line">
               <span className="text-ink-muted font-mono text-[11px]">Consensus Accuracy</span>
               <p className="text-[18px] font-semibold text-success mt-1 font-mono">
-                {AGENT_INFO[selected.id]?.precision || '99.0%'}
+                {(selected.total_analyses ?? 0) > 0
+                  ? (((selected.successful ?? 0) / selected.total_analyses) * 100).toFixed(1) + '%'
+                  : '—'}
               </p>
             </div>
             <div className="p-3 bg-elevated rounded-lg border border-line">
               <span className="text-ink-muted font-mono text-[11px]">Average Latency</span>
               <p className="text-[18px] font-semibold text-accent mt-1 font-mono">
-                {AGENT_INFO[selected.id]?.latency || '22ms'}
+                {(selected.total_analyses ?? 0) > 0
+                  ? (AGENT_INFO[selected.id]?.latency || '—')
+                  : '—'}
               </p>
             </div>
             <div className="p-3 bg-elevated rounded-lg border border-line">

@@ -6,6 +6,11 @@ export default function AgentCard({ agent, info, isSelected, onSelect }) {
   const Icon = info.icon || Bot;
   const isOnline = agent.status === 'online';
 
+  const realPrecision = agent.total_analyses > 0
+    ? ((agent.successful / agent.total_analyses) * 100).toFixed(1) + '%'
+    : '—';
+  const realLatency = agent.total_analyses > 0 ? info.latency : '—';
+
   return (
     <div
       onClick={onSelect}
@@ -30,7 +35,7 @@ export default function AgentCard({ agent, info, isSelected, onSelect }) {
 
         <div className="mt-3 p-2 rounded-lg bg-elevated border border-line flex items-center justify-between text-[11px] font-mono">
           <span className="text-ink-muted truncate">{agent.last_task_status || 'idle'}</span>
-          <span className="text-accent font-semibold shrink-0">{info.latency}</span>
+          <span className="text-accent font-semibold shrink-0">{realLatency}</span>
         </div>
 
         <div className="flex flex-wrap gap-1.5 mt-3">
@@ -43,7 +48,7 @@ export default function AgentCard({ agent, info, isSelected, onSelect }) {
       </div>
 
       <div className="mt-4 pt-3 border-t border-line flex items-center justify-between text-[11.5px] text-ink-muted">
-        <span>Precision: <strong className="text-ink font-mono">{info.precision}</strong></span>
+        <span>Precision: <strong className="text-ink font-mono">{realPrecision}</strong></span>
         <span>Tasks: <strong className="text-accent font-mono">{agent.total_analyses ?? 0}</strong></span>
       </div>
     </div>
