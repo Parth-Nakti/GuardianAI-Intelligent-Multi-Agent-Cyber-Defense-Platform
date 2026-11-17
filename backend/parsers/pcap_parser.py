@@ -1,11 +1,43 @@
 """PCAP Parser — uses Scapy to extract network traffic data."""
 
 import logging
+import os
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
+
+
+def _import_scapy():
+    """Import Scapy with workarounds for macOS sandbox restrictions.
+
+    Scapy's dns.py reads /etc/resolv.conf on import. If the process
+    lacks permission (macOS sandbox / App Sandbox), that raises
+    PermissionError inside the import chain.  We patch the helper
+    before importing the heavy ``scapy.all`` module.
+    """
+    import builtins
+    _real_open = builtins.open
+
+    def _patched_open(file, *args, **kwargs):
+        """Silently return an empty file for /etc/resolv.conf if
+        the real open raises PermissionError."""
+        try:
+            return _real_open(file, *args, **kwargs)
+        except PermissionError:
+            if str(file) == "/etc/resolv.conf":
+                import io
+                return io.StringIO("")
+            raise
+
+    builtins.open = _patched_open
+    try:
+        from scapy.all import rdpcap, IP, TCP, UDP, DNS, DNSQR, Raw, ARP, ICMP
+    finally:
+        builtins.open = _real_open
+
+    return rdpcap, IP, TCP, UDP, DNS, DNSQR, Raw, ARP, ICMP
 
 
 def parse_pcap(file_path: str) -> dict[str, Any]:
@@ -15,10 +47,10 @@ def parse_pcap(file_path: str) -> dict[str, Any]:
     Returns structured data for the Network Monitor Agent.
     """
     try:
-        from scapy.all import rdpcap, IP, TCP, UDP, DNS, DNSQR, Raw, ARP, ICMP
-    except ImportError:
-        logger.error("Scapy not installed")
-        return {"error": "Scapy not installed", "packets": []}
+        rdpcap, IP, TCP, UDP, DNS, DNSQR, Raw, ARP, ICMP = _import_scapy()
+    except Exception as e:
+        logger.error(f"Scapy import failed: {e}")
+        return {"error": f"Scapy import failed: {e}", "packets": []}
 
     try:
         packets = rdpcap(file_path)
