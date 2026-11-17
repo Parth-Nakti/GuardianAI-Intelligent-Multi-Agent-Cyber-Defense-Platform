@@ -133,14 +133,10 @@ async def get_incident_stats(db: AsyncSession) -> dict:
         status_counts[st.lower()] = r.scalar() or 0
 
     # By type
-    type_counts = {}
-    for itype in ["Phishing", "Port Scan", "Brute Force", "Malware", "Suspicious DNS", "Suspicious Traffic", "Other"]:
-        r = await db.execute(
-            select(func.count(Incident.id)).where(Incident.incident_type == itype)
-        )
-        c = r.scalar() or 0
-        if c > 0:
-            type_counts[itype] = c
+    types_query = await db.execute(
+        select(Incident.incident_type, func.count(Incident.id)).group_by(Incident.incident_type)
+    )
+    type_counts = {row[0]: row[1] for row in types_query.all() if row[0]}
 
     # Recent incidents
     recent = await get_incidents(db, limit=10)

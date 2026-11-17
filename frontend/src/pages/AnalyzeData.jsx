@@ -110,7 +110,7 @@ export default function AnalyzeData({ onAnalysisComplete }) {
       setAgentLogs(logs => [
         ...logs,
         '✓ Swarm consensus achieved (confidence > 85%)',
-        `✓ Incident #${res.data?.incident?.id || 'NEW'} recorded in active queue.`
+        `✓ Incident #${res.data?.incident?.id || res.data?.incident_id || 'NEW'} recorded in active queue.`
       ]);
       setAnalysisResult(res.data);
       if (onAnalysisComplete) onAnalysisComplete();
@@ -340,7 +340,7 @@ export default function AnalyzeData({ onAnalysisComplete }) {
               </div>
             </div>
 
-            <SeverityBadge severity={`${analysisResult.incident?.severity || 'High'} Severity`} />
+            <SeverityBadge severity={`${analysisResult.incident?.severity || (analysisResult.threats_found > 0 ? 'High' : 'Low')} Severity`} />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
@@ -358,16 +358,16 @@ export default function AnalyzeData({ onAnalysisComplete }) {
             />
             <StatCard
               label="Incident Ref"
-              value={`#${analysisResult.incident?.id ?? '—'}`}
+              value={`#${analysisResult.incident?.id ?? analysisResult.incident_id ?? '—'}`}
               accent="success"
             />
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-line">
             <button onClick={() => navigate('/reports')} className="btn btn-secondary text-[12px]">View Reports</button>
-            {analysisResult.incident?.id && (
-              <button onClick={() => navigate(`/incidents/${analysisResult.incident.id}`)} className="btn btn-primary text-[12px]">
-                <span>Investigate Incident #{analysisResult.incident.id}</span>
+            {(analysisResult.incident?.id || analysisResult.incident_id) && (
+              <button onClick={() => navigate(`/incidents/${analysisResult.incident?.id || analysisResult.incident_id}`)} className="btn btn-primary text-[12px]">
+                <span>Investigate Incident #{analysisResult.incident?.id || analysisResult.incident_id}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             )}
